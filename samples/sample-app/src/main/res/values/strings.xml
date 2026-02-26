@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CometChat Calls</string>
+
+    <!-- App Credentials Screen -->
+    <string name="app_credentials">App Credentials</string>
+    <string name="region">Region</string>
+    <string name="region_us">US</string>
+    <string name="region_eu">EU</string>
+    <string name="region_in">IN</string>
+    <string name="app_id">App ID</string>
+    <string name="app_id_hint">Enter your App ID</string>
+    <string name="auth_key">Auth Key</string>
+    <string name="auth_key_hint">Enter your Auth Key</string>
+    <string name="please_select_region">Please select a region</string>
+    <string name="invalid_app_id">Please enter a valid App ID</string>
+    <string name="invalid_auth_key">Please enter a valid Auth Key</string>
+
+    <!-- Login Screen -->
+    <string name="login">Login</string>
+    <string name="choose_sample_user">Choose a sample user</string>
+    <string name="or">OR</string>
+    <string name="enter_your_uid">Enter your UID</string>
+    <string name="enter_uid">Enter UID</string>
+    <string name="change">Change</string>
+    <string name="select_user_or_enter_uid">Please select a user or enter a UID</string>
+    <string name="login_failed">Login failed</string>
+
+    <!-- Home Screen -->
+    <string name="welcome">Welcome</string>
+    <string name="welcome_user">Welcome, %1$s</string>
+    <string name="hint_session_id">Session ID</string>
+    <string name="enter_session_id">Please enter a session ID</string>
+    <string name="permissions_required">Camera and microphone permissions are required for video calls</string>
+
+    <!-- Call Screen -->
+    <string name="invalid_session_id">Invalid session ID</string>
+    <string name="failed_to_join_call">Failed to join call: %1$s</string>
+    <string name="connection_lost">Connection lost. Reconnecting…</string>
+    <string name="connection_restored">Connection restored</string>
+    <string name="session_timed_out">Session timed out</string>
+
+    <!-- Buttons -->
+    <string name="btn_continue">Continue</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_join_meeting">Join Meeting</string>
+    <string name="btn_start_instant">Start Instant Meeting</string>
+
+    <!-- Misc -->
+    <string name="selected">Selected</string>
+</resources>

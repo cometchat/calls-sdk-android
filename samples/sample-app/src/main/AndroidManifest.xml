@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Required permissions for video calling -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Foreground service permissions for ongoing calls -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <application
+        android:name=".SampleCallsApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SampleCalls">
+
+        <!-- Splash Screen - Entry Point -->
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SampleCalls.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- App Credentials Screen -->
+        <activity
+            android:name=".ui.activity.AppCredentialsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Login Screen -->
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Home Screen - Start/Join Meeting -->
+        <activity
+            android:name=".ui.activity.HomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Call Screen - Active Call -->
+        <activity
+            android:name=".ui.activity.CallActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+
+    </application>
+
+</manifest>

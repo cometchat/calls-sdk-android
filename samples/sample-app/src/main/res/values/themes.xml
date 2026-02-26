@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SampleCalls" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/background</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Text input styling -->
+        <item name="colorOnSurface">@color/text_primary</item>
+
+        <!-- Error color -->
+        <item name="colorError">@color/error</item>
+    </style>
+
+    <style name="Theme.SampleCalls.Splash" parent="Theme.SampleCalls">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+</resources>
