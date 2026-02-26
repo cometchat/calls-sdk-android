@@ -32,7 +32,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://dl.cloudsmith.io/public/cometchat/call-team/maven/") }
+        maven { url = uri("https://dl.cloudsmith.io/public/cometchat/cometchat/maven/") }
     }
 }
 
