@@ -48,6 +48,19 @@ Sign up for a [CometChat](https://app.cometchat.com/) account to obtain your app
 1. Run the app on a device or emulator.
 
 
+## Build It with AI
+
+This sample app was built using the agent skills in `skills/`. To recreate this exact functionality in your own project, copy the `skills/` folder and use this prompt with your AI coding assistant:
+
+```text
+Using the skills in skills/, build an Android app with CometChat Calls SDK v5 that lets users
+enter their App ID, Region, and Auth Key, log in with a UID, enter a session ID, and join a
+voice or video call. Use setup for SDK initialization, join-session for joining the call, and
+session-settings for configuring voice vs video with appropriate layouts and audio modes.
+```
+
+**Skills used:** `setup`, `join-session`, `session-settings`
+
 ## Help and Support
 
 For issues running the project or integrating with our Calls SDK, consult our [documentation](https://www.cometchat.com/docs/calls/android/overview) or create a [support ticket](https://help.cometchat.com/hc/en-us). You can also access real-time support via the [CometChat Dashboard](http://app.cometchat.com/).

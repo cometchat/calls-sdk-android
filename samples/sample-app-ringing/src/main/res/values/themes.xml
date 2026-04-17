@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SampleCallsRinging" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/background</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Text input styling -->
+        <item name="colorOnSurface">@color/text_primary</item>
+
+        <!-- Bottom navigation -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+
+        <!-- Error color -->
+        <item name="colorError">@color/error</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/background</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemHorizontalTranslationEnabled">false</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="itemPaddingTop">8dp</item>
+        <item name="itemPaddingBottom">8dp</item>
+    </style>
+
+    <style name="Theme.SampleCallsRinging.Splash" parent="Theme.SampleCallsRinging">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <style name="Theme.SampleCallsRinging.Call" parent="Theme.SampleCallsRinging">
+        <item name="android:colorBackground">@color/call_background</item>
+        <item name="android:statusBarColor">@color/call_background</item>
+        <item name="android:navigationBarColor">@color/call_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

@@ -1,4 +1,4 @@
-package com.cometchat.samplecalls.utils
+package com.cometchat.samplecallsringing.utils
 
 /**
  * App credentials for CometChat Calls SDK.
@@ -9,5 +9,5 @@ package com.cometchat.samplecalls.utils
 object AppConstants {
     const val APP_ID = "26580020f03ff346" // Your App id
     const val REGION = "in"  // us, eu, or in
-    const val AUTH_KEY = "e92e05dd11c0cd8571e90d18c9363978f96a986b" // Your Auth Key
+    const val AUTH_KEY = "4152b0366478871f0fa8d19a287dd6f5ed5f8eff" // Your Auth Key
 }

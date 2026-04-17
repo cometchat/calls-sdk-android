@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CometChat Ringing</string>
+
+    <!-- App Credentials Screen -->
+    <string name="app_credentials">App Credentials</string>
+    <string name="region">Region</string>
+    <string name="region_us">US</string>
+    <string name="region_eu">EU</string>
+    <string name="region_in">IN</string>
+    <string name="app_id">App ID</string>
+    <string name="app_id_hint">Enter your App ID</string>
+    <string name="auth_key">Auth Key</string>
+    <string name="auth_key_hint">Enter your Auth Key</string>
+    <string name="please_select_region">Please select a region</string>
+    <string name="invalid_app_id">Please enter a valid App ID</string>
+    <string name="invalid_auth_key">Please enter a valid Auth Key</string>
+
+    <!-- Login Screen -->
+    <string name="login">Login</string>
+    <string name="choose_sample_user">Choose a sample user</string>
+    <string name="or">OR</string>
+    <string name="enter_your_uid">Enter your UID</string>
+    <string name="enter_uid">Enter UID</string>
+    <string name="change">Change</string>
+    <string name="select_user_or_enter_uid">Please select a user or enter a UID</string>
+    <string name="login_failed">Login failed</string>
+
+    <!-- Home Screen -->
+    <string name="tab_users">Users</string>
+    <string name="tab_call_logs">Call Logs</string>
+    <string name="permissions_required">Camera and microphone permissions are required for calls</string>
+
+    <!-- Call Actions -->
+    <string name="calling">Calling…</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="cancel">Cancel</string>
+    <string name="end_call">End Call</string>
+    <string name="audio_call">Voice Call</string>
+    <string name="video_call">Video Call</string>
+
+    <!-- Call Status -->
+    <string name="user_is_busy">User is busy</string>
+    <string name="call_rejected">Call rejected</string>
+    <string name="call_cancelled">Call cancelled</string>
+    <string name="call_ended">Call ended</string>
+    <string name="failed_to_join_call">Failed to join call: %1$s</string>
+
+    <!-- Empty States -->
+    <string name="no_users_found">No users found</string>
+    <string name="no_call_logs">No call logs</string>
+    <string name="search_users">Search users</string>
+
+    <!-- Buttons -->
+    <string name="btn_continue">Continue</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+
+    <!-- Misc -->
+    <string name="selected">Selected</string>
+    <string name="unknown">Unknown</string>
+
+    <!-- User Detail Screen -->
+    <string name="user_detail">Profile</string>
+    <string name="uid_label">UID: %1$s</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+</resources>

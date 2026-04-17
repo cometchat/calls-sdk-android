@@ -96,3 +96,6 @@ obj/
 
 # Hprof
 *.hprof
+
+# VoIP sample app (not public yet)
+samples/sample-app-voip/

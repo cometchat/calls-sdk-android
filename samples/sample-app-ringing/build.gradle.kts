@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.cometchat.samplecalls"
+    namespace = "com.cometchat.samplecallsringing"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.cometchat.samplecalls"
+        applicationId = "com.cometchat.samplecallsringing"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -48,6 +48,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
 
     // Image loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
@@ -55,6 +57,9 @@ dependencies {
     // Network
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    // CometChat Calls SDK
+    // CometChat Chat SDK (signaling, users, call logs)
+    implementation("com.cometchat:chat-sdk-android:4.0.+")
+
+    // CometChat Calls SDK (session management)
     implementation("com.cometchat:calls-sdk-android:5.0.0-beta.2")
 }

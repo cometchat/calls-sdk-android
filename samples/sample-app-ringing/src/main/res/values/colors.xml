@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#6851D6</color>
+    <color name="primary">#6851D6</color>
+    <color name="primary_light">#F0EDFA</color>
+    <color name="background">#FFFFFF</color>
+    <color name="text_primary">#141414</color>
+    <color name="text_secondary">#727272</color>
+    <color name="text_tertiary">#A1A1A1</color>
+    <color name="stroke_default">#E8E8E8</color>
+    <color name="error">#F44336</color>
+    <color name="call_accept">#4CAF50</color>
+    <color name="call_reject">#F44336</color>
+    <color name="call_background">#1A1A2E</color>
+</resources>

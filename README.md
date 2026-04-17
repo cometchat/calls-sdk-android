@@ -44,11 +44,14 @@ dependencies {
 
 For the full setup guide, refer to our [official documentation](https://www.cometchat.com/docs/calls/android/overview).
 
-## 🚀 Explore the Sample App
+## 🚀 Explore the Sample Apps
 
-Dive straight into our sample app to see the CometChat Calls SDK in action.
+Dive straight into our sample apps to see the CometChat Calls SDK in action.
 
-- [Android Sample App](samples/sample-app#readme)
+| Sample App | Description |
+|------------|-------------|
+| [Standalone Calling](samples/sample-app#readme) | Join calls by session ID — no Chat SDK required |
+| [Ringing](samples/sample-app-ringing#readme) | 1:1 calls with Chat SDK signaling (incoming/outgoing call screens, call logs) |
 
 ---
 
