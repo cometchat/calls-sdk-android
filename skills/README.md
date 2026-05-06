@@ -25,6 +25,12 @@ cp -r skills/ /path/to/your/project/skills/
 | `event-listeners` | SessionStatus, Participant, Media, ButtonClick, Layout listeners |
 | `call-logs` | CallLogRequest, fetching and displaying call history |
 
+### Migration
+
+| Skill | Triggers On |
+|-------|-------------|
+| `migration-v4-to-v5` | Upgrading from Calls SDK v4 to v5, replacing deprecated APIs, CallSettings to SessionSettings, CometChatCallsEventsListener to v5 listeners |
+
 ### Advanced
 
 | Skill | Triggers On |

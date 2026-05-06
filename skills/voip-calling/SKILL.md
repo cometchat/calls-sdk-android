@@ -480,7 +480,7 @@ When a call is accepted (via ConnectionService or fallback notification), launch
 val isVoiceOnly = callType == CometChatConstants.CALL_TYPE_AUDIO
 val settings = CometChatCalls.SessionSettingsBuilder()
     .setTitle("CometChat Call")
-    .setType(if (isVoiceOnly) SessionType.VOICE else SessionType.VIDEO)
+    .setSessionType(if (isVoiceOnly) SessionType.VOICE else SessionType.VIDEO)
     .setLayout(if (isVoiceOnly) LayoutType.SPOTLIGHT else LayoutType.TILE)
     .setAudioMode(if (isVoiceOnly) AudioMode.EARPIECE else AudioMode.SPEAKER)
     .startVideoPaused(isVoiceOnly)

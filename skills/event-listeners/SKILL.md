@@ -73,8 +73,6 @@ callSession.addMediaEventsListener(this, object : MediaEventsListener() {
     override fun onVideoResumed() {}
     override fun onRecordingStarted() {}
     override fun onRecordingStopped() {}
-    override fun onScreenShareStarted() {}
-    override fun onScreenShareStopped() {}
     override fun onAudioModeChanged(audioMode: AudioMode) {}
     override fun onCameraFacingChanged(facing: CameraFacing) {}
 })
@@ -115,7 +113,7 @@ callSession.addLayoutListener(this, object : LayoutListener() {
 - Pass `this` (Activity/Fragment) as the first argument for lifecycle binding
 - Register listeners **after** `joinSession()` succeeds (in the `onSuccess` callback)
 - Button click events fire **before** the SDK's default action
-- `Participant` object has: `uid`, `name`, `avatar`, `isAudioMuted`, `isVideoPaused`, `isPresenting`, `isPinned`, `raisedHandTimestamp`
+- `Participant` object has: `uid`, `name`, `avatar`, `isAudioMuted`, `isVideoPaused`, `isPresenting`, `isPinned`, `raisedHandTimestamp`, `pid`, `role`
 - Use `runOnUiThread {}` for UI updates inside listener callbacks
 
 ## Sample App Reference

@@ -21,6 +21,7 @@ Join a call session using `CometChatCalls.joinSession()`. Supports two approache
 ```kotlin
 import com.cometchat.calls.core.CometChatCalls
 import com.cometchat.calls.core.CallSession
+import com.cometchat.calls.model.GenerateToken
 import com.cometchat.calls.model.SessionType
 import com.cometchat.calls.model.LayoutType
 import com.cometchat.calls.model.AudioMode

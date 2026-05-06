@@ -15,7 +15,7 @@ Retrieve call history using `CallLogRequest` with pagination, filtering by type,
 ```kotlin
 import com.cometchat.calls.core.CometChatCalls
 import com.cometchat.calls.model.CallLog
-import com.cometchat.calls.model.CallLogRequest
+import com.cometchat.calls.core.CallLogRequest
 import com.cometchat.calls.model.Recording
 import com.cometchat.calls.exceptions.CometChatException
 ```

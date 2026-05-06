@@ -48,7 +48,7 @@ callSession.addMediaEventsListener(this, object : MediaEventsListener() {
     override fun onCameraFacingChanged(facing: CameraFacing) {
         when (facing) {
             CameraFacing.FRONT -> { /* front camera active */ }
-            CameraFacing.BACK -> { /* rear camera active */ }
+            CameraFacing.REAR -> { /* rear camera active */ }
         }
     }
     // ... other required overrides
@@ -56,8 +56,6 @@ callSession.addMediaEventsListener(this, object : MediaEventsListener() {
     override fun onAudioUnMuted() {}
     override fun onRecordingStarted() {}
     override fun onRecordingStopped() {}
-    override fun onScreenShareStarted() {}
-    override fun onScreenShareStopped() {}
     override fun onAudioModeChanged(audioMode: AudioMode) {}
 })
 ```
@@ -78,7 +76,7 @@ val sessionSettings = CometChatCalls.SessionSettingsBuilder()
 
 - `pauseVideo()` / `resumeVideo()` only work during an active session
 - `switchCamera()` toggles between front and back — no parameter needed
-- `CameraFacing` enum: `FRONT`, `BACK`
+- `CameraFacing` enum: `FRONT`, `REAR`
 - For voice calls (`SessionType.VOICE`), set `.startVideoPaused(true)`
 - Camera permissions must be granted at runtime before joining
 

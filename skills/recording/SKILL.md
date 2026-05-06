@@ -15,9 +15,9 @@ Record call sessions server-side. Supports manual start/stop, auto-start via `Se
 ```kotlin
 import com.cometchat.calls.core.CallSession
 import com.cometchat.calls.core.CometChatCalls
+import com.cometchat.calls.core.CallLogRequest
 import com.cometchat.calls.listeners.MediaEventsListener
 import com.cometchat.calls.listeners.ParticipantEventListener
-import com.cometchat.calls.model.CallLogRequest
 import com.cometchat.calls.model.Participant
 ```
 
@@ -51,8 +51,6 @@ callSession.addMediaEventsListener(this, object : MediaEventsListener() {
     override fun onAudioUnMuted() {}
     override fun onVideoPaused() {}
     override fun onVideoResumed() {}
-    override fun onScreenShareStarted() {}
-    override fun onScreenShareStopped() {}
     override fun onAudioModeChanged(audioMode: AudioMode) {}
     override fun onCameraFacingChanged(facing: CameraFacing) {}
 })
