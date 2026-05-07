@@ -4,15 +4,14 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.cometchat.chat.constants.CometChatConstants
-import com.cometchat.chat.core.CometChat
-import com.cometchat.chat.models.BaseMessage
-import com.cometchat.chat.core.Call
+import com.cometchat.calls.core.CometChatCalls
+import com.cometchat.calls.model.CallLog
+import com.cometchat.calls.model.CallUser
 import com.cometchat.samplecallsringing.R
 import com.cometchat.samplecallsringing.databinding.ItemCallLogBinding
 
 class CallLogsAdapter(
-    private val callLogs: MutableList<BaseMessage>
+    private val callLogs: MutableList<CallLog>
 ) : RecyclerView.Adapter<CallLogsAdapter.CallLogViewHolder>() {
 
     inner class CallLogViewHolder(val binding: ItemCallLogBinding) : RecyclerView.ViewHolder(binding.root)
@@ -23,42 +22,48 @@ class CallLogsAdapter(
     }
 
     override fun onBindViewHolder(holder: CallLogViewHolder, position: Int) {
-        val message = callLogs[position]
-        if (message !is Call) return
+        val callLog = callLogs[position]
 
         with(holder.binding) {
             // Call type icon
-            val isVideo = message.type == CometChatConstants.CALL_TYPE_VIDEO
+            val isVideo = callLog.type == "video"
             ivCallType.setImageResource(
                 if (isVideo) R.drawable.ic_call_video_log else R.drawable.ic_call_audio_log
             )
 
             // Caller/receiver name
-            val loggedInUid = CometChat.getLoggedInUser()?.uid
-            val isOutgoing = message.sender?.uid == loggedInUid
+            val loggedInUid = CometChatCalls.getLoggedInUser()?.uid
+            val initiator = callLog.initiator as? CallUser
+            val receiver = callLog.receiver as? CallUser
+            val isOutgoing = initiator?.uid == loggedInUid
             val displayName = if (isOutgoing) {
-                (message.callReceiver as? com.cometchat.chat.models.User)?.name ?: holder.itemView.context.getString(R.string.unknown)
+                receiver?.name ?: holder.itemView.context.getString(R.string.unknown)
             } else {
-                message.sender?.name ?: holder.itemView.context.getString(R.string.unknown)
+                initiator?.name ?: holder.itemView.context.getString(R.string.unknown)
             }
             tvName.text = displayName
 
             // Call status
-            tvCallStatus.text = formatCallStatus(message.callStatus, isOutgoing)
+            tvCallStatus.text = formatCallStatus(callLog.status, isOutgoing)
 
             // Timestamp
-            tvTimestamp.text = DateUtils.getRelativeTimeSpanString(
-                message.sentAt * 1000,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            )
+            val timestamp = callLog.initiatedAt
+            if (timestamp > 0) {
+                tvTimestamp.text = DateUtils.getRelativeTimeSpanString(
+                    timestamp * 1000,
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE
+                )
+            } else {
+                tvTimestamp.text = ""
+            }
         }
     }
 
     override fun getItemCount(): Int = callLogs.size
 
-    fun updateList(logs: List<BaseMessage>) {
+    fun updateList(logs: List<CallLog>) {
         callLogs.clear()
         callLogs.addAll(logs)
         notifyDataSetChanged()
@@ -66,13 +71,13 @@ class CallLogsAdapter(
 
     private fun formatCallStatus(status: String?, isOutgoing: Boolean): String {
         return when (status) {
-            CometChatConstants.CALL_STATUS_INITIATED -> if (isOutgoing) "Outgoing" else "Incoming"
-            CometChatConstants.CALL_STATUS_ONGOING -> "Ongoing"
-            CometChatConstants.CALL_STATUS_UNANSWERED -> "Missed"
-            CometChatConstants.CALL_STATUS_REJECTED -> "Rejected"
-            CometChatConstants.CALL_STATUS_CANCELLED -> "Cancelled"
-            CometChatConstants.CALL_STATUS_BUSY -> "Busy"
-            CometChatConstants.CALL_STATUS_ENDED -> "Ended"
+            "initiated" -> if (isOutgoing) "Outgoing" else "Incoming"
+            "ongoing" -> "Ongoing"
+            "unanswered" -> "Missed"
+            "rejected" -> "Rejected"
+            "cancelled" -> "Cancelled"
+            "busy" -> "Busy"
+            "ended" -> "Ended"
             else -> status ?: "Unknown"
         }
     }

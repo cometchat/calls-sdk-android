@@ -188,18 +188,19 @@ object Repository {
 
     // ── Fetch Call Logs ─────────────────────────────────────────────────
 
-    fun fetchCallLogs(listener: CometChat.CallbackListener<List<BaseMessage>>) {
-        val messagesRequest = MessagesRequest.MessagesRequestBuilder()
-            .setCategory("call")
+    private var callLogRequest: com.cometchat.calls.core.CallLogRequest? = null
+
+    fun fetchCallLogs(listener: CometChatCalls.CallbackListener<List<com.cometchat.calls.model.CallLog>>) {
+        callLogRequest = com.cometchat.calls.core.CallLogRequest.CallLogRequestBuilder()
             .setLimit(30)
             .build()
 
-        messagesRequest.fetchPrevious(object : CometChat.CallbackListener<List<BaseMessage>>() {
-            override fun onSuccess(messages: List<BaseMessage>) {
-                listener.onSuccess(messages)
+        callLogRequest!!.fetchNext(object : CometChatCalls.CallbackListener<List<com.cometchat.calls.model.CallLog>>() {
+            override fun onSuccess(callLogs: List<com.cometchat.calls.model.CallLog>) {
+                listener.onSuccess(callLogs)
             }
 
-            override fun onError(e: ChatException) {
+            override fun onError(e: CallsException) {
                 listener.onError(e)
             }
         })

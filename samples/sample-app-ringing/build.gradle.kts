@@ -61,5 +61,5 @@ dependencies {
     implementation("com.cometchat:chat-sdk-android:4.0.+")
 
     // CometChat Calls SDK (session management)
-    implementation("com.cometchat:calls-sdk-android:5.0.0-beta.2")
+    implementation("com.cometchat:calls-sdk-android:5.0.0")
 }

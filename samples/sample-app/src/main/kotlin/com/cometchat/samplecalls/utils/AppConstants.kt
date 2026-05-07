@@ -7,7 +7,7 @@ package com.cometchat.samplecalls.utils
  * Get your credentials at: https://app.cometchat.com
  */
 object AppConstants {
-    const val APP_ID = "26580020f03ff346" // Your App id
-    const val REGION = "in"  // us, eu, or in
-    const val AUTH_KEY = "e92e05dd11c0cd8571e90d18c9363978f96a986b" // Your Auth Key
+    const val APP_ID = "" // Your App id
+    const val REGION = ""  // us, eu, or in
+    const val AUTH_KEY = "" // Your Auth Key
 }

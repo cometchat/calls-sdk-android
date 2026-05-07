@@ -27,7 +27,7 @@ Calls SDK v5 is a drop-in replacement for v4. All v4 APIs are preserved as depre
 ```groovy
 // build.gradle.kts
 -implementation("com.cometchat:calls-sdk-android:4.x.x")
-+implementation("com.cometchat:calls-sdk-android:5.0.0-beta.2")
++implementation("com.cometchat:calls-sdk-android:5.0.0")
 ```
 
 If using CometChat UI Kits, just updating the version is sufficient — the UI Kit works through the deprecated compatibility layer.

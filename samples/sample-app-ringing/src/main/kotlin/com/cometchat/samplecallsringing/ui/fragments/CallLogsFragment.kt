@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cometchat.chat.core.CometChat
-import com.cometchat.chat.exceptions.CometChatException
-import com.cometchat.chat.models.BaseMessage
+import com.cometchat.calls.core.CometChatCalls
+import com.cometchat.calls.exceptions.CometChatException as CallsException
+import com.cometchat.calls.model.CallLog
 import com.cometchat.samplecallsringing.data.repository.Repository
 import com.cometchat.samplecallsringing.databinding.FragmentCallLogsBinding
 import com.cometchat.samplecallsringing.ui.adapters.CallLogsAdapter
@@ -51,15 +51,15 @@ class CallLogsFragment : Fragment() {
     }
 
     private fun fetchCallLogs() {
-        Repository.fetchCallLogs(object : CometChat.CallbackListener<List<BaseMessage>>() {
-            override fun onSuccess(messages: List<BaseMessage>) {
+        Repository.fetchCallLogs(object : CometChatCalls.CallbackListener<List<CallLog>>() {
+            override fun onSuccess(callLogs: List<CallLog>) {
                 if (!isAdded) return
-                adapter.updateList(messages)
+                adapter.updateList(callLogs)
                 binding.swipeRefresh.isRefreshing = false
-                binding.tvEmpty.visibility = if (messages.isEmpty()) View.VISIBLE else View.GONE
+                binding.tvEmpty.visibility = if (callLogs.isEmpty()) View.VISIBLE else View.GONE
             }
 
-            override fun onError(e: CometChatException) {
+            override fun onError(e: CallsException) {
                 if (!isAdded) return
                 binding.swipeRefresh.isRefreshing = false
                 binding.tvEmpty.visibility = View.VISIBLE
