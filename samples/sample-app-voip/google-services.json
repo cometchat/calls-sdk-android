@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "719981313633",
+    "project_id": "android-ui-kit-ashfaq",
+    "storage_bucket": "android-ui-kit-ashfaq.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719981313633:android:d8c7280246d58dbfa97420",
+        "android_client_info": {
+          "package_name": "com.cometchat.pn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnh2blCkmMmCUezIGxZFgs-iQsHGF-dTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719981313633:android:0c01e34651f06019a97420",
+        "android_client_info": {
+          "package_name": "com.cometchat.samplecallsvoip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnh2blCkmMmCUezIGxZFgs-iQsHGF-dTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

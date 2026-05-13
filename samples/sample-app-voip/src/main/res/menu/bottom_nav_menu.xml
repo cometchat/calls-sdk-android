@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_users"
+        android:icon="@drawable/ic_nav_users"
+        android:title="@string/tab_users" />
+    <item
+        android:id="@+id/nav_call_logs"
+        android:icon="@drawable/ic_nav_call_logs"
+        android:title="@string/tab_call_logs" />
+</menu>
