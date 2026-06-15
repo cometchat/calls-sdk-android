@@ -132,6 +132,7 @@ class CallActivity : AppCompatActivity() {
 
             override fun onSessionLeft() {
                 Log.d(TAG, "Session left")
+                CometChat.clearActiveCall()
                 runOnUiThread {
                     CometChatOngoingCallService.abort(this@CallActivity)
                     finish()
@@ -148,6 +149,7 @@ class CallActivity : AppCompatActivity() {
 
             override fun onSessionTimedOut() {
                 Log.d(TAG, "Session timed out")
+                CometChat.clearActiveCall()
                 runOnUiThread {
                     CometChatOngoingCallService.abort(this@CallActivity)
                     finish()
@@ -156,6 +158,7 @@ class CallActivity : AppCompatActivity() {
 
             override fun onConnectionClosed() {
                 Log.d(TAG, "Connection closed")
+                CometChat.clearActiveCall()
                 runOnUiThread {
                     CometChatOngoingCallService.abort(this@CallActivity)
                     finish()
@@ -176,6 +179,8 @@ class CallActivity : AppCompatActivity() {
         if (session.isSessionActive) {
             session.leaveSession()
         }
+
+        CometChat.clearActiveCall()
 
         Repository.endCall(sessionId, object : CometChat.CallbackListener<Call>() {
             override fun onSuccess(call: Call) {

@@ -65,7 +65,7 @@ dependencies {
     implementation("com.cometchat:calls-sdk-android:5.0.0")
 
     // CometChat Push Notifications library (VoIP + chat notifications)
-    implementation("com.cometchat:push-notifications-android:1.0.0-beta.1")
+    implementation("com.cometchat:push-notifications-android:1.0.0-alpha.1")
 
     // Firebase Cloud Messaging
     implementation("com.google.firebase:firebase-messaging:24.1.0")

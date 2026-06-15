@@ -96,7 +96,6 @@ class VoIPApplication : Application() {
             .setNotificationSmallIcon(R.drawable.ic_launcher_foreground)
             .setVoIPEnabled(true)
             .setInlineReplyEnabled(true)
-            .setVoIPRingTimeoutMs(40_000)
             .build()
 
         CometChatPushNotifications.init(this, config)
@@ -138,6 +137,12 @@ class VoIPApplication : Application() {
     /**
      * Handler for when user accepts a call from the library's built-in call screen
      * (background/killed state only).
+     *
+     * NOTE: We use the Application context (this@VoIPApplication) for startActivity
+     * instead of the provided context. The provided context comes from CallRingingActivity
+     * which is finishing/destroyed. On Xiaomi/MIUI/HyperOS, starting an activity from a
+     * dying Activity context is silently blocked by their background-activity-launch restriction.
+     * Using Application context with FLAG_ACTIVITY_NEW_TASK works reliably across all OEMs.
      */
     private fun setupCallAnsweredHandler() {
         CometChatPushNotifications.setOnCallAnsweredHandler(object : CallAnsweredHandler {
@@ -149,12 +154,12 @@ class VoIPApplication : Application() {
                 CometChat.acceptCall(sessionId, object : CometChat.CallbackListener<Call>() {
                     override fun onSuccess(call: Call?) {
                         Log.d(TAG, "Call accepted on server")
-                        val intent = Intent(context, CallActivity::class.java).apply {
+                        val intent = Intent(this@VoIPApplication, CallActivity::class.java).apply {
                             putExtra(CallActivity.EXTRA_SESSION_ID, sessionId)
                             putExtra(CallActivity.EXTRA_CALL_TYPE, call?.type ?: "video")
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         }
-                        context.startActivity(intent)
+                        this@VoIPApplication.startActivity(intent)
                     }
 
                     override fun onError(e: ChatException?) {
