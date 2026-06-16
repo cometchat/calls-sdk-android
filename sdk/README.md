@@ -37,7 +37,7 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.cometchat:calls-sdk-android:5.0.0")
+    implementation("com.cometchat:calls-sdk-android:5.0.1")
 }
 ```
 
