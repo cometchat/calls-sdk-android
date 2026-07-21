@@ -64,7 +64,7 @@ sample-app-ringing/
 ## Dependencies
 
 - `com.cometchat:chat-sdk-android:4.0.+` — Call signaling, user management, call logs
-- `com.cometchat:calls-sdk-android:5.0.1` — Call session management
+- `com.cometchat:calls-sdk-android:5.0.2` — Call session management
 - AndroidX, Material Components, Glide, OkHttp
 
 ## Build It with AI
