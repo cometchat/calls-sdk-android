@@ -264,7 +264,7 @@ object Repository {
 
     fun endCall(sessionId: String, listener: CometChat.CallbackListener<Call>) {
         CometChat.endCall(sessionId, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(call: Call) {
+            override fun onSuccess(call: Call?) {
                 listener.onSuccess(call)
             }
 

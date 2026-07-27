@@ -62,10 +62,10 @@ dependencies {
     implementation("com.cometchat:chat-sdk-android:4.0.+")
 
     // CometChat Calls SDK (session management)
-    implementation("com.cometchat:calls-sdk-android:5.0.0")
+    implementation("com.cometchat:calls-sdk-android:5.0.2")
 
     // CometChat Push Notifications library (VoIP + chat notifications)
-    implementation("com.cometchat:push-notifications-android:1.0.0-alpha.1")
+    implementation("com.cometchat:push-notifications-android:1.0.0")
 
     // Firebase Cloud Messaging
     implementation("com.google.firebase:firebase-messaging:24.1.0")

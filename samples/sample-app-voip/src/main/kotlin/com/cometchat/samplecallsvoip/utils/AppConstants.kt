@@ -7,8 +7,8 @@ package com.cometchat.samplecallsvoip.utils
  * Get your credentials at: https://app.cometchat.com
  */
 object AppConstants {
-    const val APP_ID = "1677595b2028517c0" // Your App id
-    const val REGION = "us"  // us, eu, or in
-    const val AUTH_KEY = "f37be822f305842c8511d9724c77f345b5eb65e2" // Your Auth Key
-    const val PROVIDER_ID = "ashfaq-ali" // Push notification provider ID from CometChat dashboard
+    const val APP_ID = "****************" // Your App id
+    const val REGION = "**"  // us, eu, or in
+    const val AUTH_KEY = "****************************************" // Your Auth Key
+    const val PROVIDER_ID = "**********" // Push notification provider ID from CometChat dashboard
 }

@@ -183,7 +183,7 @@ class CallActivity : AppCompatActivity() {
         CometChat.clearActiveCall()
 
         Repository.endCall(sessionId, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(call: Call) {
+            override fun onSuccess(call: Call?) {
                 Log.d(TAG, "Call ended successfully")
             }
 
