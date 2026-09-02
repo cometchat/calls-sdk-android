@@ -56,5 +56,5 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // CometChat Calls SDK
-    implementation("com.cometchat:calls-sdk-android:5.0.2")
+    implementation("com.cometchat:calls-sdk-android:5.0.4")
 }

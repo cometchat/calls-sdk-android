@@ -12,7 +12,7 @@ Native VoIP calling using Android's Telecom framework (`ConnectionService`). Sho
 
 ## Prerequisites
 
-- Chat SDK v4 (`com.cometchat:chat-sdk-android:4.0.+`) + Calls SDK v5 (`com.cometchat:calls-sdk-android:5.0.2`) integrated
+- Chat SDK v4 (`com.cometchat:chat-sdk-android:4.0.+`) + Calls SDK v5 (`com.cometchat:calls-sdk-android:5.0.4`) integrated
 - Firebase Cloud Messaging (FCM) configured with `com.google.gms.google-services` plugin
 - Push notifications enabled in CometChat Dashboard
 - Android 8.0+ (API 26+), compileSdk 35
