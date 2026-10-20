@@ -11,6 +11,7 @@ import com.cometchat.calls.exceptions.CometChatException as CallsException
 import com.cometchat.chat.core.AppSettings
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException as ChatException
+import com.cometchat.samplecallsringing.push.PushNotifications
 import com.cometchat.samplecallsringing.ui.activity.LoginActivity
 import com.cometchat.samplecallsringing.utils.AppUtils
 
@@ -49,6 +50,7 @@ class AppCredentialsViewModel : ViewModel() {
                     callAppSettings,
                     object : CometChatCalls.CallbackListener<String>() {
                         override fun onSuccess(result: String) {
+                            PushNotifications.init(activity.applicationContext, appId, region)
                             activity.startActivity(Intent(activity, LoginActivity::class.java))
                             activity.finish()
                         }

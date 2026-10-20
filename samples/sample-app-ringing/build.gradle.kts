@@ -1,11 +1,13 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Firebase Cloud Messaging for incoming-call pushes. Needs a local google-services.json (git-ignored).
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.cometchat.samplecallsringing"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.cometchat.samplecallsringing"
@@ -62,4 +64,9 @@ dependencies {
 
     // CometChat Calls SDK (session management)
     implementation("com.cometchat:calls-sdk-android:5.0.4")
+
+    // Push notifications: incoming-call rings delivered through FCM (beta.3 matches calls-core)
+    implementation("com.cometchat:push-notifications-android:2.0.0-beta.3")
+    implementation("com.cometchat:push-notifications-calls-android:2.0.0-beta.3")
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
 }

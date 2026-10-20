@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.cometchat.calls.constants.Constants
 import com.cometchat.calls.core.CallSession
 import com.cometchat.calls.core.CometChatCalls
 import com.cometchat.calls.exceptions.CometChatException as CallsException
@@ -21,6 +22,8 @@ import com.cometchat.chat.constants.CometChatConstants
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException as ChatException
 import com.cometchat.chat.core.Call
+import com.cometchat.pushnotification.calls.CallBundles
+import com.cometchat.pushnotification.calls.CometChatCallNotifications
 import com.cometchat.samplecallsringing.R
 import com.cometchat.samplecallsringing.data.repository.Repository
 
@@ -41,11 +44,17 @@ class CallActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_call)
 
-        sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: run {
+        // Opened either by the ring screen's answer or by answering the notification: the push SDK passes
+        // the answered call in CallBundles, otherwise it is a call started from this screen.
+        val answeredCall = CallBundles.getCall(intent)
+        sessionId = answeredCall?.sessionId ?: intent.getStringExtra(EXTRA_SESSION_ID) ?: run {
             finish()
             return
         }
-        callType = intent.getStringExtra(EXTRA_CALL_TYPE) ?: CometChatConstants.CALL_TYPE_VIDEO
+        callType = answeredCall?.callType ?: intent.getStringExtra(EXTRA_CALL_TYPE) ?: CometChatConstants.CALL_TYPE_VIDEO
+        if (answeredCall != null) {
+            CometChatCallNotifications.onIncomingCallScreenClosed(sessionId)
+        }
 
         applyWindowInsets()
         callContainer = findViewById(R.id.call_container)
@@ -177,12 +186,12 @@ class CallActivity : AppCompatActivity() {
             session.leaveSession()
         }
 
-        Repository.endCall(sessionId, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(call: Call) {
+        Repository.endCall(sessionId, Constants.CALL_STATUS_ENDED, object : CometChatCalls.CallbackListener<Void>() {
+            override fun onSuccess(result: Void?) {
                 Log.d(TAG, "Call ended successfully")
             }
 
-            override fun onError(e: ChatException) {
+            override fun onError(e: CallsException) {
                 Log.e(TAG, "Failed to end call: ${e.message}")
             }
         })

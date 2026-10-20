@@ -14,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.cometchat.chat.core.CometChat
 import com.cometchat.samplecallsringing.R
-import com.cometchat.samplecallsringing.RingingApplication
 import com.cometchat.samplecallsringing.databinding.ActivityHomeBinding
 import com.cometchat.samplecallsringing.ui.adapters.HomePagerAdapter
 
@@ -52,9 +51,6 @@ class HomeActivity : AppCompatActivity() {
         if (!hasRequiredPermissions()) {
             requestPermissions()
         }
-
-        // Ensure call listener is registered (e.g. when returning from login)
-        (application as RingingApplication).registerCallListener()
     }
 
     private fun applyWindowInsets() {

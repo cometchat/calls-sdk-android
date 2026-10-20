@@ -14,7 +14,7 @@ import com.cometchat.calls.exceptions.CometChatException as CallsException
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException as ChatException
 import com.cometchat.samplecallsringing.R
-import com.cometchat.samplecallsringing.RingingApplication
+import com.cometchat.samplecallsringing.push.PushNotifications
 import com.cometchat.samplecallsringing.data.repository.Repository
 import com.cometchat.samplecallsringing.databinding.ActivityUserDetailBinding
 import com.cometchat.samplecallsringing.utils.AppUtils
@@ -74,12 +74,13 @@ class UserDetailActivity : AppCompatActivity() {
     private fun setupLogout() {
         binding.btnLogout.setOnClickListener {
             binding.btnLogout.isEnabled = false
+            // Stop this phone ringing for the signed-in user before the session goes (as calls-core does).
+            PushNotifications.unregisterToken()
             Repository.logoutChatUser(object : CometChat.CallbackListener<String>() {
                 override fun onSuccess(s: String) {
                     Repository.logoutCallsUser(object : CometChatCalls.CallbackListener<String>() {
                         override fun onSuccess(message: String) {
                             Log.d(TAG, "Logout successful")
-                            (application as RingingApplication).removeCallListener()
                             AppUtils.clearLoggedInUid(this@UserDetailActivity)
                             runOnUiThread {
                                 val intent = Intent(this@UserDetailActivity, LoginActivity::class.java).apply {

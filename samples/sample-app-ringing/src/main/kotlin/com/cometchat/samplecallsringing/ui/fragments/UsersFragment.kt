@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cometchat.chat.constants.CometChatConstants
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException
-import com.cometchat.chat.core.Call
 import com.cometchat.chat.models.User
 import com.cometchat.samplecallsringing.data.repository.Repository
 import com.cometchat.samplecallsringing.databinding.FragmentUsersBinding
@@ -145,24 +144,14 @@ class UsersFragment : Fragment() {
     }
 
     private fun initiateCall(user: User, callType: String) {
-        val call = Call(user.uid, CometChatConstants.RECEIVER_TYPE_USER, callType)
-        Repository.initiateCall(call, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(outgoingCall: Call) {
-                if (!isAdded) return
-                val intent = Intent(requireContext(), OutgoingCallActivity::class.java).apply {
-                    putExtra("SESSION_ID", outgoingCall.sessionId)
-                    putExtra("RECEIVER_NAME", user.name)
-                    putExtra("RECEIVER_AVATAR", user.avatar)
-                    putExtra("CALL_TYPE", callType)
-                }
-                startActivity(intent)
-            }
-
-            override fun onError(e: CometChatException) {
-                if (!isAdded) return
-                Toast.makeText(requireContext(), "Call failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        // The outgoing screen places the call itself (Calls SDK), as in calls-core.
+        val intent = Intent(requireContext(), OutgoingCallActivity::class.java).apply {
+            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_UID, user.uid)
+            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_NAME, user.name)
+            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_AVATAR, user.avatar)
+            putExtra(OutgoingCallActivity.EXTRA_CALL_TYPE, callType)
+        }
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

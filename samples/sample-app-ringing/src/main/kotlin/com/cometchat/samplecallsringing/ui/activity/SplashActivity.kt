@@ -12,6 +12,7 @@ import com.cometchat.chat.core.AppSettings
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException as ChatException
 import com.cometchat.samplecallsringing.R
+import com.cometchat.samplecallsringing.push.PushNotifications
 import com.cometchat.samplecallsringing.utils.AppConstants
 import com.cometchat.samplecallsringing.utils.AppUtils
 
@@ -46,6 +47,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun initSdkAndNavigate(appId: String, region: String) {
         Log.d(TAG, "Initializing Chat SDK with appId: $appId, region: $region")
+        PushNotifications.init(applicationContext, appId, region)
 
         val appSettings = AppSettings.AppSettingsBuilder()
             .subscribePresenceForAllUsers()
@@ -102,6 +104,8 @@ class SplashActivity : AppCompatActivity() {
 
     private fun navigateAfterInit() {
         val destination = if (CometChat.getLoggedInUser() != null) {
+            // A saved session: register this phone's push token, as LoginActivity does after a fresh login.
+            PushNotifications.registerToken()
             HomeActivity::class.java
         } else {
             LoginActivity::class.java

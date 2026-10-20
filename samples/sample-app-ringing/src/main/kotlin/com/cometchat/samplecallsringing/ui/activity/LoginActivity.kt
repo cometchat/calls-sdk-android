@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.cometchat.chat.core.CometChat
 import com.cometchat.samplecallsringing.R
-import com.cometchat.samplecallsringing.RingingApplication
+import com.cometchat.samplecallsringing.push.PushNotifications
 import com.cometchat.samplecallsringing.databinding.ActivityLoginBinding
 import com.cometchat.samplecallsringing.ui.adapters.SampleUsersAdapter
 import com.cometchat.samplecallsringing.utils.AppConstants
@@ -73,8 +73,8 @@ class LoginActivity : AppCompatActivity() {
                         AppUtils.saveLoggedInUid(this, enteredUid)
                     }
                 }
-                // Register global incoming call listener
-                (application as RingingApplication).registerCallListener()
+                // This phone can now be rung for calls to this user.
+                PushNotifications.registerToken()
                 navigateToHome()
             } else if (isLoggedIn == false) {
                 Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show()

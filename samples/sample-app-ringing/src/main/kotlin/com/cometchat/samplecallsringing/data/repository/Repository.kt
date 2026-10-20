@@ -5,13 +5,11 @@ import android.os.Looper
 import com.cometchat.calls.core.CometChatCalls
 import com.cometchat.calls.exceptions.CometChatException as CallsException
 import com.cometchat.calls.model.CallUser
-import com.cometchat.chat.constants.CometChatConstants
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.core.MessagesRequest
 import com.cometchat.chat.core.UsersRequest
 import com.cometchat.chat.exceptions.CometChatException as ChatException
 import com.cometchat.chat.models.BaseMessage
-import com.cometchat.chat.core.Call
 import com.cometchat.chat.models.User
 import com.cometchat.samplecallsringing.utils.AppUtils
 import okhttp3.Callback
@@ -206,72 +204,42 @@ object Repository {
         })
     }
 
-    // ── Call Operations ─────────────────────────────────────────────────
+    // ── Call Operations (Calls SDK, as in calls-core) ──────────────────
 
-    fun initiateCall(call: Call, listener: CometChat.CallbackListener<Call>) {
-        CometChat.initiateCall(call, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(outgoingCall: Call) {
-                listener.onSuccess(outgoingCall)
+    /**
+     * Ends the call on the server with [status], a `Constants.CALL_STATUS_*` value such as
+     * cancelled or ended. Calls are initiated with the Calls SDK, so they are ended with it too.
+     */
+    fun endCall(sessionId: String, status: String, listener: CometChatCalls.CallbackListener<Void>) {
+        CometChatCalls.endCall(sessionId, status, object : CometChatCalls.CallbackListener<Void>() {
+            override fun onSuccess(result: Void?) {
+                listener.onSuccess(result)
             }
 
-            override fun onError(e: ChatException) {
+            override fun onError(e: CallsException) {
                 listener.onError(e)
             }
         })
     }
 
-    fun acceptCall(sessionId: String, listener: CometChat.CallbackListener<Call>) {
-        CometChat.acceptCall(sessionId, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(call: Call) {
-                listener.onSuccess(call)
+    /**
+     * The server's status for [sessionId] from recent call logs (e.g. rejected, busy, initiated), or
+     * null when it is not listed yet or the lookup fails. Nothing pushes a decline to the caller, so
+     * a ringing caller polls this, as calls-core does.
+     */
+    fun fetchCallStatus(sessionId: String, listener: (String?) -> Unit) {
+        val request = com.cometchat.calls.core.CallLogRequest.CallLogRequestBuilder()
+            .setLimit(5)
+            .build()
+
+        request.fetchNext(object : CometChatCalls.CallbackListener<List<com.cometchat.calls.model.CallLog>>() {
+            override fun onSuccess(callLogs: List<com.cometchat.calls.model.CallLog>) {
+                val status = callLogs.firstOrNull { it.sessionID == sessionId }?.status
+                mainHandler.post { listener(status) }
             }
 
-            override fun onError(e: ChatException) {
-                listener.onError(e)
-            }
-        })
-    }
-
-    fun rejectCall(sessionId: String, listener: CometChat.CallbackListener<Call>) {
-        CometChat.rejectCall(
-            sessionId,
-            CometChatConstants.CALL_STATUS_REJECTED,
-            object : CometChat.CallbackListener<Call>() {
-                override fun onSuccess(call: Call) {
-                    listener.onSuccess(call)
-                }
-
-                override fun onError(e: ChatException) {
-                    listener.onError(e)
-                }
-            }
-        )
-    }
-
-    fun cancelCall(sessionId: String, listener: CometChat.CallbackListener<Call>) {
-        CometChat.rejectCall(
-            sessionId,
-            CometChatConstants.CALL_STATUS_CANCELLED,
-            object : CometChat.CallbackListener<Call>() {
-                override fun onSuccess(call: Call) {
-                    listener.onSuccess(call)
-                }
-
-                override fun onError(e: ChatException) {
-                    listener.onError(e)
-                }
-            }
-        )
-    }
-
-    fun endCall(sessionId: String, listener: CometChat.CallbackListener<Call>) {
-        CometChat.endCall(sessionId, object : CometChat.CallbackListener<Call>() {
-            override fun onSuccess(call: Call) {
-                listener.onSuccess(call)
-            }
-
-            override fun onError(e: ChatException) {
-                listener.onError(e)
+            override fun onError(e: CallsException) {
+                mainHandler.post { listener(null) }
             }
         })
     }
