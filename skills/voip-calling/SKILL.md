@@ -6,6 +6,12 @@ inclusion: manual
 
 # CometChat Calls SDK v5 — VoIP Calling
 
+> **On Calls SDK 5.1 or later, start with the `ringing-integration` skill instead.** The Push Notifications
+> SDK 2.0 rings incoming calls itself: FCM, the ringing notification, the full-screen screen over the lock screen,
+> answer, decline and missed calls, in every app state. That is what `samples/sample-app-ringing` uses. This
+> skill covers building the incoming side yourself with Android's Telecom framework, as `samples/sample-app-voip`
+> does.
+
 ## Overview
 
 Native VoIP calling using Android's Telecom framework (`ConnectionService`). Shows system call UI on lock screen, works when app is killed, integrates with Bluetooth/car systems. Requires FCM push notifications. Falls back to a high-priority notification when TelecomManager is unavailable.
