@@ -12,6 +12,9 @@
     <string name="app_id_hint">Enter your App ID</string>
     <string name="auth_key">Auth Key</string>
     <string name="auth_key_hint">Enter your Auth Key</string>
+    <string name="push_provider_id">Push Provider ID</string>
+    <string name="push_provider_id_hint">Enter your push provider ID</string>
+    <string name="push_provider_id_note">From the dashboard: Notifications → Push → your FCM provider. Without it, incoming calls do not ring.</string>
     <string name="please_select_region">Please select a region</string>
     <string name="invalid_app_id">Please enter a valid App ID</string>
     <string name="invalid_auth_key">Please enter a valid Auth Key</string>
@@ -26,25 +29,109 @@
     <string name="select_user_or_enter_uid">Please select a user or enter a UID</string>
     <string name="login_failed">Login failed</string>
 
-    <!-- Home Screen -->
+    <!-- Home -->
     <string name="tab_users">Users</string>
-    <string name="tab_call_logs">Call Logs</string>
+    <string name="tab_groups">Groups</string>
+    <string name="tab_history">History</string>
+    <string name="open_profile">Open profile</string>
     <string name="permissions_required">Camera and microphone permissions are required for calls</string>
+    <string name="microphone_required">Allow microphone access to place a call</string>
+    <string name="camera_required">Allow camera access to place a video call</string>
 
-    <!-- Call Actions -->
+    <!-- Users -->
+    <string name="search_users">Search users</string>
+    <string name="no_users_found">No users found</string>
+    <string name="no_users_matching">No user called “%1$s”</string>
+    <string name="voice_call_to">Voice call %1$s</string>
+    <string name="video_call_to">Video call %1$s</string>
+
+    <!-- Groups -->
+    <string name="search_groups">Search groups</string>
+    <string name="new_group_call">New group call</string>
+    <string name="no_groups_title">No groups yet</string>
+    <string name="no_groups_message">Create a group to ring several people at once.</string>
+    <string name="no_groups_matching">No group called “%1$s”</string>
+    <plurals name="member_count">
+        <item quantity="one">%d member</item>
+        <item quantity="other">%d members</item>
+    </plurals>
+
+    <!-- New group call -->
+    <string name="group_name">Group name</string>
+    <string name="group_name_hint">Optional. Defaults to the members\' names</string>
+    <string name="members_selected">Members · %1$d selected</string>
+    <string name="members_limit">A group can ring up to %1$d people</string>
+    <string name="start_voice_call">Start voice</string>
+    <string name="start_video_call">Start video</string>
+    <string name="create_group_failed">Could not create the group: %1$s</string>
+    <string name="members_added_partial">Added %1$d of %2$d members</string>
+
+    <!-- History -->
+    <string name="loading_history">Loading call history…</string>
+    <string name="no_call_logs">No calls yet</string>
+    <string name="no_call_logs_message">Calls you make and receive show up here.</string>
+    <string name="history_error">Could not load call history: %1$s</string>
+    <string name="retry">Retry</string>
+    <string name="call_details">Call details</string>
+    <string name="kind_meeting">Meeting</string>
+    <string name="kind_group_call">Group call</string>
+    <string name="kind_voice_call">Voice call</string>
+    <string name="kind_video_call">Video call</string>
+    <string name="status_live">Live</string>
+    <string name="status_ended">Ended</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_no_answer">No answer</string>
+    <string name="status_missed">Missed</string>
+    <string name="status_declined">Declined</string>
+    <string name="status_busy">Busy</string>
+    <string name="status_not_connected">Not connected</string>
+    <string name="field_status">Status</string>
+    <string name="field_duration">Duration</string>
+    <string name="field_started">Started</string>
+    <string name="field_ended">Ended</string>
+    <string name="field_type">Type</string>
+    <string name="field_participants">Participants</string>
+    <string name="session_id">Session ID</string>
+    <string name="call_back_voice">Call back (voice)</string>
+    <string name="call_back_video">Call back (video)</string>
+    <string name="ring_group_voice">Ring the group (voice)</string>
+    <string name="ring_group_video">Ring the group (video)</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="date_time">%1$s, %2$s</string>
+    <string name="meta_separator">·</string>
+    <string name="none_value">—</string>
+
+    <!-- Outgoing call -->
+    <string name="header_voice_call">Voice call</string>
+    <string name="header_video_call">Video call</string>
+    <string name="header_group_voice_call">Group voice call</string>
+    <string name="header_group_video_call">Group video call</string>
     <string name="calling">Calling…</string>
-    <string name="incoming_call">Incoming Call</string>
-    <string name="accept">Accept</string>
-    <string name="reject">Reject</string>
-    <string name="cancel">Cancel</string>
-    <string name="end_call">End Call</string>
-    <string name="audio_call">Voice Call</string>
-    <string name="video_call">Video Call</string>
+    <string name="ringing">Ringing…</string>
+    <plurals name="group_ringing">
+        <item quantity="one">Ringing · %d member</item>
+        <item quantity="other">Ringing · %d members</item>
+    </plurals>
+    <string name="outgoing_no_answer">No answer</string>
+    <string name="outgoing_failed">Call failed</string>
+    <string name="outgoing_declined">Declined</string>
+    <string name="outgoing_busy">Busy</string>
+    <string name="end_call">End call</string>
 
-    <!-- Call Status -->
-    <string name="user_is_busy">User is busy</string>
-    <string name="call_rejected">Call rejected</string>
-    <string name="call_cancelled">Call cancelled</string>
+    <!-- Incoming call -->
+    <string name="incoming_call">Incoming call</string>
+    <string name="incoming_voice_call">Incoming voice call</string>
+    <string name="incoming_video_call">Incoming video call</string>
+    <string name="incoming_group_voice_call">Incoming group voice call</string>
+    <string name="incoming_group_video_call">Incoming group video call</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Decline</string>
+    <string name="cancel">Cancel</string>
+    <string name="audio_call">Voice call</string>
+    <string name="video_call">Video call</string>
+
+    <!-- Call errors -->
     <string name="call_ended">Call ended</string>
     <string name="failed_to_join_call">Failed to join call: %1$s</string>
 
@@ -56,23 +143,32 @@
     <string name="ring_readiness_open_settings">Open settings</string>
     <string name="ring_readiness_later">Later</string>
 
-    <!-- Empty States -->
-    <string name="no_users_found">No users found</string>
-    <string name="no_call_logs">No call logs</string>
-    <string name="search_users">Search users</string>
+    <!-- Profile -->
+    <string name="profile">Profile</string>
+    <string name="uid">UID</string>
+    <string name="copy_uid">Copy UID</string>
+    <string name="uid_copied">UID copied</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_system">System</string>
+    <string name="appearance_light">Light</string>
+    <string name="appearance_dark">Dark</string>
+    <string name="app_info">App</string>
+    <string name="app_version">App version</string>
+    <string name="calls_sdk">Calls SDK</string>
+    <string name="chat_sdk">Chat SDK</string>
+    <string name="push_sdk">Push SDK</string>
+    <string name="not_set">Not set</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_out_confirm_title">Sign out?</string>
+    <string name="sign_out_confirm_message">This phone stops ringing for %1$s.</string>
+    <string name="sign_out_failed">Sign out failed: %1$s</string>
 
     <!-- Buttons -->
     <string name="btn_continue">Continue</string>
-    <string name="btn_login">Login</string>
-    <string name="btn_logout">Logout</string>
 
     <!-- Misc -->
     <string name="selected">Selected</string>
     <string name="unknown">Unknown</string>
-
-    <!-- User Detail Screen -->
-    <string name="user_detail">Profile</string>
-    <string name="uid_label">UID: %1$s</string>
-    <string name="status_online">Online</string>
-    <string name="status_offline">Offline</string>
 </resources>

@@ -25,6 +25,7 @@ class AppCredentialsActivity : AppCompatActivity() {
         applyWindowInsets()
         initViewModel()
         initClickListeners()
+        binding.etPushProviderId.setText(AppUtils.getPushProviderId(this))
     }
 
     private fun applyWindowInsets() {
@@ -58,8 +59,9 @@ class AppCredentialsActivity : AppCompatActivity() {
                 else -> {
                     viewModel.initSDKs(
                         this,
-                        binding.etAppId.text.toString(),
-                        binding.etAuthKey.text.toString()
+                        binding.etAppId.text.toString().trim(),
+                        binding.etAuthKey.text.toString().trim(),
+                        binding.etPushProviderId.text.toString().trim()
                     )
                 }
             }

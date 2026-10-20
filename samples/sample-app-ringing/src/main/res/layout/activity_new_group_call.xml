@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar" />
+
+    <TextView
+        style="@style/App.SectionLabel"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/group_name" />
+
+    <EditText
+        android:id="@+id/et_group_name"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_search_pill"
+        android:hint="@string/group_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="textCapSentences"
+        android:maxLength="60"
+        android:maxLines="1"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_tertiary"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_selected"
+        style="@style/App.SectionLabel"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp" />
+
+    <include
+        android:id="@+id/search"
+        layout="@layout/view_search_field"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="4dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_users"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_start_voice"
+            style="@style/App.PrimaryButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/start_voice_call"
+            app:icon="@drawable/ic_call_white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_start_video"
+            style="@style/App.PrimaryButton"
+            android:layout_width="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/start_video_call"
+            app:icon="@drawable/ic_videocam_white" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/primary"
+        android:visibility="gone" />
+</LinearLayout>

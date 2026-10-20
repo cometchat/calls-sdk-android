@@ -8,6 +8,7 @@ object AppUtils {
     private const val KEY_APP_ID = "app_id"
     private const val KEY_REGION = "region"
     private const val KEY_AUTH_KEY = "auth_key"
+    private const val KEY_PUSH_PROVIDER_ID = "push_provider_id"
     private const val KEY_LOGGED_IN_UID = "logged_in_uid"
 
     const val SAMPLE_APP_USERS_URL = "https://assets.cometchat.io/sampleapp/sampledata.json"
@@ -20,12 +21,13 @@ object AppUtils {
     const val REGION_EU = "eu"
     const val REGION_IN = "in"
 
-    fun saveCredentials(context: Context, appId: String, region: String, authKey: String) {
+    fun saveCredentials(context: Context, appId: String, region: String, authKey: String, pushProviderId: String) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_APP_ID, appId)
             .putString(KEY_REGION, region)
             .putString(KEY_AUTH_KEY, authKey)
+            .putString(KEY_PUSH_PROVIDER_ID, pushProviderId)
             .apply()
     }
 
@@ -43,6 +45,14 @@ object AppUtils {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_AUTH_KEY, null)
     }
+
+    /** The provider ID from [AppConstants], or else the one entered on the credentials screen. */
+    fun getPushProviderId(context: Context): String =
+        AppConstants.PUSH_PROVIDER_ID.ifEmpty {
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getString(KEY_PUSH_PROVIDER_ID, null)
+                .orEmpty()
+        }
 
     fun saveLoggedInUid(context: Context, uid: String) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

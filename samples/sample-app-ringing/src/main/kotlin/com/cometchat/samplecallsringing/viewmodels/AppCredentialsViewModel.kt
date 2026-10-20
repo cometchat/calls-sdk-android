@@ -27,9 +27,9 @@ class AppCredentialsViewModel : ViewModel() {
         selectedRegion.value = region
     }
 
-    fun initSDKs(activity: Activity, appId: String, authKey: String) {
+    fun initSDKs(activity: Activity, appId: String, authKey: String, pushProviderId: String) {
         val region = selectedRegion.value ?: AppUtils.REGION_US
-        AppUtils.saveCredentials(activity, appId, region, authKey)
+        AppUtils.saveCredentials(activity, appId, region, authKey, pushProviderId)
 
         // 1. Init Chat SDK
         val appSettings = AppSettings.AppSettingsBuilder()

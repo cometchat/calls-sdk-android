@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Who is signed in -->
+            <com.cometchat.samplecallsringing.ui.views.AvatarView
+                android:id="@+id/iv_avatar"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.App.Title"
+                tools:text="Andrew Joseph" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.App.Caption"
+                tools:text="Online" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="6dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uid"
+                    android:textAppearance="@style/TextAppearance.App.Body"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tv_uid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:ellipsize="middle"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.App.Code"
+                    tools:text="cometchat-uid-1" />
+
+                <ImageButton
+                    android:id="@+id/btn_copy_uid"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/copy_uid"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_copy" />
+            </LinearLayout>
+
+            <!-- Appearance -->
+            <TextView
+                style="@style/App.SectionLabel"
+                android:layout_marginTop="24dp"
+                android:text="@string/appearance" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/group_appearance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_appearance_system"
+                    style="@style/App.Segment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/appearance_system" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_appearance_light"
+                    style="@style/App.Segment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/appearance_light" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_appearance_dark"
+                    style="@style/App.Segment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/appearance_dark" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- App: credentials and SDK versions -->
+            <TextView
+                style="@style/App.SectionLabel"
+                android:layout_marginTop="24dp"
+                android:text="@string/app_info" />
+
+            <LinearLayout
+                android:id="@+id/layout_app_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/sign_out"
+                android:textAllCaps="false"
+                android:textColor="@color/error"
+                android:textSize="15sp"
+                app:cornerRadius="26dp"
+                app:icon="@drawable/ic_logout"
+                app:iconGravity="textStart"
+                app:iconTint="@color/error"
+                app:strokeColor="@color/error" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

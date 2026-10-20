@@ -5,6 +5,9 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+// The push SDK has no runtime version constant, so the profile screen reads it from BuildConfig.
+val pushSdkVersion = "2.0.0-beta.3"
+
 android {
     namespace = "com.cometchat.samplecallsringing"
     compileSdk = 36
@@ -15,6 +18,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
+        buildConfigField("String", "PUSH_SDK_VERSION", "\"$pushSdkVersion\"")
     }
 
     buildTypes {
@@ -38,6 +42,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -59,14 +64,14 @@ dependencies {
     // Network
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    // CometChat Chat SDK (signaling, users, call logs)
-    implementation("com.cometchat:chat-sdk-android:4.0.+")
+    // CometChat Chat SDK: the user and group lists, and creating a group to ring
+    implementation("com.cometchat:chat-sdk-android:4.2.0")
 
-    // CometChat Calls SDK (session management)
-    implementation("com.cometchat:calls-sdk-android:5.0.4")
+    // CometChat Calls SDK: initiateCall / endCall, sessions and call logs
+    implementation("com.cometchat:calls-sdk-android:5.1.0-beta.2")
 
-    // Push notifications: incoming-call rings delivered through FCM (beta.3 matches calls-core)
-    implementation("com.cometchat:push-notifications-android:2.0.0-beta.3")
-    implementation("com.cometchat:push-notifications-calls-android:2.0.0-beta.3")
+    // Push Notifications SDK: rings incoming calls delivered through FCM, in every app state
+    implementation("com.cometchat:push-notifications-android:$pushSdkVersion")
+    implementation("com.cometchat:push-notifications-calls-android:$pushSdkVersion")
     implementation("com.google.firebase:firebase-messaging:24.1.0")
 }

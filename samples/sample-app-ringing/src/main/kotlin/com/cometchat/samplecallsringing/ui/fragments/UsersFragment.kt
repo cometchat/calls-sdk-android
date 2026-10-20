@@ -1,161 +1,118 @@
 package com.cometchat.samplecallsringing.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cometchat.chat.constants.CometChatConstants
+import androidx.recyclerview.widget.RecyclerView
 import com.cometchat.chat.core.CometChat
+import com.cometchat.chat.core.UsersRequest
 import com.cometchat.chat.exceptions.CometChatException
 import com.cometchat.chat.models.User
-import com.cometchat.samplecallsringing.data.repository.Repository
+import com.cometchat.samplecallsringing.R
+import com.cometchat.samplecallsringing.calls.CallLauncher
+import com.cometchat.samplecallsringing.calls.CallTarget
 import com.cometchat.samplecallsringing.databinding.FragmentUsersBinding
-import com.cometchat.samplecallsringing.ui.activity.OutgoingCallActivity
 import com.cometchat.samplecallsringing.ui.adapters.UsersAdapter
-import com.cometchat.samplecallsringing.utils.AppUtils
 
+/** Everyone in the app, with presence. The phone and video buttons ring that person. */
 class UsersFragment : Fragment() {
 
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: UsersAdapter
+    private lateinit var search: SearchDebouncer
+    private var request: UsersRequest? = null
     private var isLoading = false
     private var hasMore = true
-    private var isSearching = false
-    private val searchHandler = Handler(Looper.getMainLooper())
-    private var searchRunnable: Runnable? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        setupSearch()
-        fetchUsers()
-    }
-
-    private fun setupSearch() {
-        binding.editSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                searchRunnable?.let { searchHandler.removeCallbacks(it) }
-                val query = s?.toString()?.trim() ?: ""
-                searchRunnable = Runnable {
-                    if (query.isEmpty()) {
-                        isSearching = false
-                        adapter.updateList(emptyList())
-                        Repository.resetUsersRequest()
-                        hasMore = true
-                        fetchUsers()
-                    } else {
-                        isSearching = true
-                        searchUsers(query)
-                    }
-                }
-                searchHandler.postDelayed(searchRunnable!!, 300)
-            }
-        })
-    }
-
-    private fun searchUsers(keyword: String) {
-        Repository.searchUsers(keyword, object : CometChat.CallbackListener<List<User>>() {
-            override fun onSuccess(users: List<User>) {
-                if (!isAdded) return
-                val loggedInUid = AppUtils.getLoggedInUid(requireContext())
-                val filtered = users.filter { it.uid != loggedInUid }
-                adapter.updateList(filtered)
-                binding.tvEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
-            }
-
-            override fun onError(e: CometChatException) {
-                if (!isAdded) return
-                adapter.updateList(emptyList())
-                binding.tvEmpty.visibility = View.VISIBLE
-            }
-        })
-    }
-
-    private fun setupRecyclerView() {
+        binding.search.editSearch.setHint(R.string.search_users)
         adapter = UsersAdapter(
-            mutableListOf(),
-            onVoiceCallClick = { user ->
-                initiateCall(user, CometChatConstants.CALL_TYPE_AUDIO)
-            },
-            onVideoCallClick = { user ->
-                initiateCall(user, CometChatConstants.CALL_TYPE_VIDEO)
-            }
+            onVoiceCallClick = { call(it, isVideo = false) },
+            onVideoCallClick = { call(it, isVideo = true) }
         )
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewUsers.layoutManager = layoutManager
         binding.recyclerViewUsers.adapter = adapter
-
-        binding.recyclerViewUsers.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (!isLoading && hasMore && !isSearching && lastVisibleItem >= totalItemCount - 5) {
-                    fetchUsers()
-                }
+        binding.recyclerViewUsers.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0 && layoutManager.findLastVisibleItemPosition() >= adapter.itemCount - 5) loadMore()
             }
         })
+
+        search = SearchDebouncer(binding.search) { reload() }
+        reload()
     }
 
-    private fun fetchUsers() {
+    /** Starts the list again for the current search. */
+    private fun reload() {
+        request = UsersRequest.UsersRequestBuilder()
+            .setLimit(PAGE_SIZE)
+            .hideBlockedUsers(true)
+            .apply { if (search.query.isNotEmpty()) setSearchKeyword(search.query) }
+            .build()
+        hasMore = true
+        isLoading = false
+        loadMore(replacing = true)
+    }
+
+    private fun loadMore(replacing: Boolean = false) {
+        val request = request ?: return
+        if (isLoading || !hasMore) return
         isLoading = true
-        Repository.fetchUsers(object : CometChat.CallbackListener<List<User>>() {
+        val generation = search.generation
+        if (replacing && adapter.itemCount == 0) binding.progress.visibility = View.VISIBLE
+
+        request.fetchNext(object : CometChat.CallbackListener<List<User>>() {
             override fun onSuccess(users: List<User>) {
-                if (!isAdded) return
+                // A newer search started while this page was loading.
+                if (_binding == null || generation != search.generation) return
                 isLoading = false
-                if (users.isEmpty()) {
-                    hasMore = false
-                    return
-                }
-                val loggedInUid = AppUtils.getLoggedInUid(requireContext())
-                val filtered = users.filter { it.uid != loggedInUid }
-                adapter.appendList(filtered)
-                binding.tvEmpty.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+                hasMore = users.size >= PAGE_SIZE
+                val me = CometChat.getLoggedInUser()?.uid
+                val page = users.filter { it.uid != me }
+                if (replacing) adapter.submit(page) else adapter.append(page)
+                showState()
             }
 
             override fun onError(e: CometChatException) {
-                if (!isAdded) return
+                if (_binding == null || generation != search.generation) return
                 isLoading = false
-                if (adapter.itemCount == 0) {
-                    binding.tvEmpty.visibility = View.VISIBLE
-                }
+                hasMore = false
+                if (replacing) adapter.submit(emptyList())
+                showState()
             }
         })
     }
 
-    private fun initiateCall(user: User, callType: String) {
-        // The outgoing screen places the call itself (Calls SDK), as in calls-core.
-        val intent = Intent(requireContext(), OutgoingCallActivity::class.java).apply {
-            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_UID, user.uid)
-            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_NAME, user.name)
-            putExtra(OutgoingCallActivity.EXTRA_RECEIVER_AVATAR, user.avatar)
-            putExtra(OutgoingCallActivity.EXTRA_CALL_TYPE, callType)
-        }
-        startActivity(intent)
+    private fun showState() {
+        binding.progress.visibility = View.GONE
+        val empty = adapter.itemCount == 0
+        binding.tvEmpty.visibility = if (empty) View.VISIBLE else View.GONE
+        binding.tvEmpty.text = if (search.query.isEmpty()) getString(R.string.no_users_found)
+        else getString(R.string.no_users_matching, search.query)
+    }
+
+    private fun call(user: User, isVideo: Boolean) {
+        CallLauncher.start(requireActivity(), CallTarget(user.uid, user.name ?: user.uid, user.avatar, isGroup = false), isVideo)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        search.cancel()
         _binding = null
+    }
+
+    private companion object {
+        const val PAGE_SIZE = 30
     }
 }

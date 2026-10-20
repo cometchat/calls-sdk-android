@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.cometchat.samplecallsringing.ui.views.AvatarView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.Title"
+                        tools:text="Andrew Joseph" />
+
+                    <TextView
+                        android:id="@+id/tv_kind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="@style/TextAppearance.App.Caption"
+                        tools:text="Video call" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Overview: three rows of two fields. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/field_status"
+                            android:textAppearance="@style/TextAppearance.App.Caption" />
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:textAppearance="@style/TextAppearance.App.Label"
+                            tools:text="Ended" />
+                    </LinearLayout>
+
+                    <include
+                        android:id="@+id/field_duration"
+                        layout="@layout/item_detail_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/field_started"
+                        layout="@layout/item_detail_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/field_ended"
+                        layout="@layout/item_detail_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/field_type"
+                        layout="@layout/item_detail_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/field_participants"
+                        layout="@layout/item_detail_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_call_back"
+                style="@style/App.PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_marginTop="24dp"
+                tools:text="Call back (video)" />
+
+            <TextView
+                style="@style/App.SectionLabel"
+                android:layout_marginTop="24dp"
+                android:text="@string/session_id" />
+
+            <TextView
+                android:id="@+id/tv_session_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_code"
+                android:padding="12dp"
+                android:textAppearance="@style/TextAppearance.App.Code"
+                android:textIsSelectable="true"
+                tools:text="v1.us.2658.abcdef" />
+
+            <TextView
+                android:id="@+id/tv_participants_label"
+                style="@style/App.SectionLabel"
+                android:layout_marginTop="24dp"
+                android:text="@string/field_participants" />
+
+            <LinearLayout
+                android:id="@+id/layout_participants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:showDividers="middle" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

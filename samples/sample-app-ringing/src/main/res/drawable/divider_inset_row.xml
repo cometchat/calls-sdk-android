@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hairline between label/value rows in a card. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android" android:insetLeft="16dp">
+    <shape android:shape="rectangle">
+        <solid android:color="@color/stroke_default" />
+        <size android:height="1dp" />
+    </shape>
+</inset>

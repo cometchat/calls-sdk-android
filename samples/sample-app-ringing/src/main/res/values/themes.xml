@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.SampleCallsRinging" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
-        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorOnSecondary">@color/on_primary</item>
 
-        <!-- Background -->
         <item name="android:colorBackground">@color/background</item>
-        <item name="colorSurface">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorError">@color/error</item>
 
-        <!-- Status bar -->
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_system_bars</item>
 
-        <!-- Text input styling -->
-        <item name="colorOnSurface">@color/text_primary</item>
-
-        <!-- Bottom navigation -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.Dialog</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.App.Dialog</item>
+    </style>
 
-        <!-- Error color -->
-        <item name="colorError">@color/error</item>
+    <style name="ThemeOverlay.App.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
@@ -40,10 +45,13 @@
         <item name="android:windowBackground">@color/background</item>
     </style>
 
+    <!-- Ringing and in-call screens: dark in both themes, because they sit over video. -->
     <style name="Theme.SampleCallsRinging.Call" parent="Theme.SampleCallsRinging">
         <item name="android:colorBackground">@color/call_background</item>
+        <item name="android:windowBackground">@color/call_background</item>
         <item name="android:statusBarColor">@color/call_background</item>
         <item name="android:navigationBarColor">@color/call_background</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 </resources>

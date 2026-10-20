@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/call_background"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp">
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:letterSpacing="0.08"
+        android:textAllCaps="true"
+        android:textColor="@color/call_text_secondary"
+        android:textSize="14sp"
+        tools:text="Video call" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <com.cometchat.samplecallsringing.ui.views.AvatarView
         android:id="@+id/img_avatar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_default_avatar"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+        android:layout_width="128dp"
+        android:layout_height="128dp" />
 
     <TextView
         android:id="@+id/tv_receiver_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:gravity="center"
+        android:textColor="@color/call_text_primary"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:text="Andrew Joseph" />
 
     <TextView
         android:id="@+id/tv_calling"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:accessibilityLiveRegion="polite"
         android:text="@string/calling"
-        android:textColor="@android:color/white"
+        android:textColor="@color/call_text_secondary"
         android:textSize="16sp" />
 
     <View
@@ -46,13 +58,22 @@
 
     <ImageButton
         android:id="@+id/btn_cancel"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="64dp"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
         android:background="@drawable/bg_circle_red"
-        android:contentDescription="@string/cancel"
-        android:padding="16dp"
+        android:contentDescription="@string/end_call"
+        android:padding="20dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_call_cancel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="48dp"
+        android:importantForAccessibility="no"
+        android:text="@string/end_call"
+        android:textColor="@color/call_text_primary"
+        android:textSize="14sp" />
 
 </LinearLayout>

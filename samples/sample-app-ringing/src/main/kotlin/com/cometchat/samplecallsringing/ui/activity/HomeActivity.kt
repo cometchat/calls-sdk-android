@@ -12,7 +12,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
 import com.cometchat.chat.core.CometChat
 import com.cometchat.pushnotification.CometChatPushNotifications
 import com.cometchat.pushnotification.PNCallback
@@ -30,6 +29,13 @@ class HomeActivity : AppCompatActivity() {
 
         /** Each readiness problem is pointed out once per process, not on every return to this screen. */
         private val READINESS_SHOWN = mutableSetOf<RingReadiness>()
+
+        /** Bottom navigation item → the title shown above that tab. */
+        private val TABS = listOf(
+            R.id.nav_users to R.string.tab_users,
+            R.id.nav_groups to R.string.tab_groups,
+            R.id.nav_history to R.string.tab_history
+        )
 
         private val REQUIRED_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arrayOf(
@@ -70,7 +76,7 @@ class HomeActivity : AppCompatActivity() {
      * Each of these silences an incoming call without an error anywhere: notifications off, the
      * incoming-call channel muted, full-screen notifications revoked (Android 14+, off by default on
      * some devices), Do Not Disturb. The push SDK names the one that applies; this shows it once and
-     * offers the exact settings page, as calls-core does.
+     * offers the exact settings page.
      */
     private fun checkRingReadiness() {
         CometChatPushNotifications.ensureRingReady(this, object : PNCallback<RingReadiness> {
@@ -110,31 +116,26 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        val adapter = HomePagerAdapter(this)
-        binding.viewPager.adapter = adapter
+        binding.viewPager.adapter = HomePagerAdapter(this)
         binding.viewPager.isUserInputEnabled = false
+        // Keep every tab alive, so switching tabs keeps each list and its scroll position.
+        binding.viewPager.offscreenPageLimit = TABS.size
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_users -> { binding.viewPager.currentItem = 0; true }
-                R.id.nav_call_logs -> { binding.viewPager.currentItem = 1; true }
-                else -> false
-            }
+            val index = TABS.indexOfFirst { it.first == item.itemId }
+            if (index < 0) return@setOnItemSelectedListener false
+            binding.viewPager.setCurrentItem(index, false)
+            binding.tvTitle.setText(TABS[index].second)
+            true
         }
     }
 
+    /** Your avatar in the top-right corner opens the profile. */
     private fun setupToolbar() {
         val user = CometChat.getLoggedInUser()
-        if (user != null && !user.avatar.isNullOrEmpty()) {
-            Glide.with(this)
-                .load(user.avatar)
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_avatar)
-                .into(binding.ivUserAvatar)
-        }
-
-        binding.ivUserAvatar.setOnClickListener {
-            startActivity(Intent(this, UserDetailActivity::class.java))
+        binding.ivUserAvatar.set(user?.name ?: user?.uid, user?.avatar)
+        binding.btnProfile.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 

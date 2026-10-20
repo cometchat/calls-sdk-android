@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
 import com.cometchat.pushnotification.calls.CallBundles
 import com.cometchat.pushnotification.calls.CometChatCallNotifications
+import com.cometchat.pushnotification.calls.IncomingCall
 import com.cometchat.samplecallsringing.R
 import com.cometchat.samplecallsringing.databinding.ActivityIncomingCallBinding
 
@@ -33,7 +33,7 @@ class IncomingCallActivity : AppCompatActivity() {
         sessionId = call.sessionId
 
         applyWindowInsets()
-        setupUI(call.callerName, call.callerAvatarUrl)
+        setupUI(call)
         setupButtons()
 
         // The SDK reports the ring ending for every reason: cancelled, timed out, declined on another
@@ -51,16 +51,20 @@ class IncomingCallActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUI(name: String?, avatar: String?) {
-        binding.tvCallerName.text = name ?: getString(R.string.unknown)
-        if (!avatar.isNullOrEmpty()) {
-            Glide.with(this)
-                .load(avatar)
-                .placeholder(R.drawable.ic_default_avatar)
-                .error(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(binding.imgAvatar)
-        }
+    private fun setupUI(call: IncomingCall) {
+        val name = call.callerName ?: getString(R.string.unknown)
+        binding.tvCallerName.text = name
+        binding.imgAvatar.set(name, call.callerAvatarUrl)
+        // A group call is not a peer call: the call carries on when someone leaves.
+        val isGroup = !call.isPeerCall
+        binding.tvIncomingCall.setText(
+            when {
+                isGroup && call.isVideo -> R.string.incoming_group_video_call
+                isGroup -> R.string.incoming_group_voice_call
+                call.isVideo -> R.string.incoming_video_call
+                else -> R.string.incoming_voice_call
+            }
+        )
     }
 
     private fun setupButtons() {
