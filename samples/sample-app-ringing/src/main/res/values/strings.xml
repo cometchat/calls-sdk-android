@@ -48,6 +48,14 @@
     <string name="call_ended">Call ended</string>
     <string name="failed_to_join_call">Failed to join call: %1$s</string>
 
+    <!-- Ring readiness (push notifications SDK) -->
+    <string name="ring_readiness_title">Incoming calls may not ring</string>
+    <string name="ring_readiness_fsi_revoked">Full-screen notifications are turned off for this app, so an incoming call cannot show on the lock screen. Turn them on in Settings.</string>
+    <string name="ring_readiness_channel_muted">The Incoming calls notification channel is muted, so calls will not ring. Turn its sound back on in Settings.</string>
+    <string name="ring_readiness_dnd">Do Not Disturb is on and may silence incoming calls.</string>
+    <string name="ring_readiness_open_settings">Open settings</string>
+    <string name="ring_readiness_later">Later</string>
+
     <!-- Empty States -->
     <string name="no_users_found">No users found</string>
     <string name="no_call_logs">No call logs</string>
