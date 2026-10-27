@@ -51,7 +51,9 @@ object CallLogDisplay {
      */
     fun counterpart(log: CallLog): CallTarget? {
         (log.receiver as? CallGroup)?.let { group ->
-            return CallTarget(group.guid, group.name ?: group.guid, group.icon, isGroup = true)
+            // A group log can come back without its guid; that row falls back to the users below.
+            val guid: String? = group.guid
+            if (!guid.isNullOrBlank()) return CallTarget(guid, group.name ?: guid, group.icon, isGroup = true)
         }
         val me = CometChatCalls.getLoggedInUser()?.uid
         return listOf(log.initiator, log.receiver)

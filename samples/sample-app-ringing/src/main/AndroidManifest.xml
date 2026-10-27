@@ -114,6 +114,14 @@
             </intent-filter>
         </service>
 
+        <!-- Keeps a joined call alive in the background with an ongoing-call notification. The Calls
+             SDK does not declare it: without this entry CometChatOngoingCallService.launch() finds no
+             service and the call drops when the app leaves the screen. -->
+        <service
+            android:name="com.cometchat.calls.services.CometChatOngoingCallService"
+            android:foregroundServiceType="camera|microphone|mediaPlayback"
+            android:exported="false" />
+
     </application>
 
 </manifest>

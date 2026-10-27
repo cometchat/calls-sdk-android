@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -62,14 +63,14 @@ class HomeActivity : AppCompatActivity() {
         setupViewPager()
         setupToolbar()
 
+        // Once per screen, never from onResume: a permission request pauses and resumes this
+        // activity, so asking from onResume asks again every time it comes back, and with
+        // notifications denied the screen flickers in a loop.
         if (!hasRequiredPermissions()) {
             requestPermissions()
+        } else {
+            checkRingReadiness()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkRingReadiness()
     }
 
     /**
@@ -79,6 +80,9 @@ class HomeActivity : AppCompatActivity() {
      * offers the exact settings page.
      */
     private fun checkRingReadiness() {
+        // ensureRingReady asks for the notification permission itself; once the user has said no,
+        // asking again would only bring the dialog back.
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) return
         CometChatPushNotifications.ensureRingReady(this, object : PNCallback<RingReadiness> {
             override fun onResult(result: PNResult<RingReadiness>) {
                 val readiness = result.valueOrNull() ?: return
@@ -160,6 +164,8 @@ class HomeActivity : AppCompatActivity() {
             if (!allGranted) {
                 Toast.makeText(this, R.string.permissions_required, Toast.LENGTH_LONG).show()
             }
+            // Notifications just turned on: now name anything else that would silence a call.
+            checkRingReadiness()
         }
     }
 }

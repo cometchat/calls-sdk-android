@@ -67,7 +67,7 @@ class OutgoingCallActivity : AppCompatActivity() {
     private var receiverName = ""
     private var isVideo = true
 
-    private val timeout = Runnable { giveUp(OutgoingCall.EndReason.TIMEOUT) }
+    private val timeout = Runnable { onRingTimeout() }
     private val statusPoll = Runnable { pollServerStatus() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,6 +174,30 @@ class OutgoingCallActivity : AppCompatActivity() {
         val sessionId = call.sessionId ?: return
         startActivity(CallActivity.intent(this, sessionId, receiverName, isVideo, isPeerCall = !call.isGroup))
         finish()
+    }
+
+    /**
+     * The ring timer expired. The callee may have answered moments ago, before the join reached this
+     * side: giving up then would leave the session and end a call the callee is already in. So ask
+     * the server first; `ongoing` means answered, anything else (or no reply in time) is no answer.
+     */
+    private fun onRingTimeout() {
+        val sessionId = call.sessionId ?: return
+        if (!call.isRinging) return
+        var decided = false
+        val decide = { status: String? ->
+            if (!decided && !isDestroyed) {
+                decided = true
+                if (status?.lowercase() == Constants.CALL_STATUS_ONGOING) {
+                    Log.i(TAG, "ring timer expired, but $sessionId is ongoing: answered, joining")
+                    onAnswered()
+                } else {
+                    giveUp(OutgoingCall.EndReason.TIMEOUT)
+                }
+            }
+        }
+        handler.postDelayed({ decide(null) }, SERVER_STATUS_TIMEOUT_MS)
+        Repository.fetchCallStatus(sessionId) { decide(it) }
     }
 
     /**

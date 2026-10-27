@@ -1,22 +1,17 @@
 package com.cometchat.samplecallsringing
 
 import android.app.Application
-import com.cometchat.samplecallsringing.push.PushNotifications
-import com.cometchat.samplecallsringing.utils.AppConstants
 import com.cometchat.samplecallsringing.utils.Appearance
-import com.cometchat.samplecallsringing.utils.AppUtils
+import com.cometchat.samplecallsringing.utils.SdkInit
 
 class RingingApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
         Appearance.apply(this)
-        // A push can wake a cold process before the splash screen runs, so the ring is configured here
-        // too. Incoming calls are rung by the push SDK, not by a Chat SDK listener.
-        val appId = AppConstants.APP_ID.ifEmpty { AppUtils.getAppId(this) }
-        val region = AppConstants.REGION.ifEmpty { AppUtils.getRegion(this) }
-        if (!appId.isNullOrEmpty() && !region.isNullOrEmpty()) {
-            PushNotifications.init(this, appId, region)
-        }
+        // Every SDK is initialized here, not only on the splash screen: a push can wake a cold process,
+        // and Android can bring the app back straight onto Home or a call after the process died.
+        // Those screens must find the SDKs ready. Incoming calls are rung by the push SDK.
+        SdkInit.credentials(this)?.let { (appId, region) -> SdkInit.init(this, appId, region) }
     }
 }
