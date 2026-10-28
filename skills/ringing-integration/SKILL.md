@@ -28,11 +28,12 @@ implementation("com.cometchat:push-notifications-calls-android:2.0.0")
 implementation("com.google.firebase:firebase-messaging:24.1.0")
 ```
 
-- Build: **compileSdk 36** and **Android Gradle Plugin 8.9.1+**. The Push SDK brings `androidx.core` 1.18.0, whose AAR metadata sets `minCompileSdk=36` and `minAndroidGradlePluginVersion=8.9.1`. Use Kotlin 2.1: the Push SDK and `androidx.core` 1.18.0 depend on `kotlin-stdlib` 2.1.20, and the sample builds with AGP 8.11.2 and Kotlin 2.1.20
+- Build: **compileSdk 36** and **Android Gradle Plugin 8.9.1+**. The Push SDK brings `androidx.core` 1.18.0, whose AAR metadata sets `minCompileSdk=36` and `minAndroidGradlePluginVersion=8.9.1`. Use Kotlin 2.1: the Push SDK and `androidx.core` 1.18.0 depend on `kotlin-stdlib` 2.1.20, and the sample builds with AGP 8.11.2 and Kotlin 2.1.20. `minSdk` 26 (the Calls SDK's floor); Java 11 or later (the sample uses 17)
+- The Google Services plugin (`com.google.gms.google-services` 4.4.2) and your `google-services.json`
 - Calls SDK initialized and the user logged in (`CometChatCalls.login`)
 - An **FCM push provider** on the dashboard (Notifications → Push), using the same Firebase project as your `google-services.json`. Its **provider ID** goes in the push SDK configuration
 - Runtime permissions **before** `initiateCall`: `RECORD_AUDIO`, plus `CAMERA` for video. The media session is prepared straight away
-- `POST_NOTIFICATIONS` (Android 13+) and `USE_FULL_SCREEN_INTENT` in the manifest, so the call can ring over the lock screen
+- Manifest: `POST_NOTIFICATIONS`, `USE_FULL_SCREEN_INTENT` and the SDK's own ring screen, answer activity and keep-alive service are merged from `push-notifications-calls-android`. Your app declares its `FirebaseMessagingService` (step 1), `CometChatOngoingCallService` (step 5) and its call activities. `POST_NOTIFICATIONS` is still a runtime permission on Android 13+: `ensureRingReady` requests it (step 8)
 
 ## 1. Configure the push SDK on every process start
 
@@ -71,6 +72,18 @@ class RingingMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) = CometChatPushNotifications.handleTokenRefresh(token)
 }
+```
+
+`handlePushNotification` returns `false` for a push that is not CometChat's. The SDK never declares a Firebase service, so declare yours:
+
+```xml
+<service
+    android:name=".push.RingingMessagingService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
 ```
 
 ## 2. Tokens: login and logout
