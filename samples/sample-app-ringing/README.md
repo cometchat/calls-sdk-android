@@ -7,7 +7,7 @@ rings, so the call connects as soon as it is answered.
 
 ## Prerequisites
 
-- Android Studio Hedgehog (2023.1.1) or later
+- Android Studio Narwhal (2025.1.1) or later (the project uses Android Gradle Plugin 8.11)
 - Android SDK 26+ (minSdk 26, targetSdk 35, compileSdk 36)
 - A device or emulator with Google Play services
 - A [CometChat](https://www.cometchat.com/) app with:
@@ -20,8 +20,8 @@ rings, so the call connects as soon as it is answered.
 ## Setup
 
 1. Clone the repository and open it in Android Studio.
-2. Copy your `google-services.json` into `samples/sample-app-ringing/`. The file is git-ignored. Without it the app
-   still builds and can place calls, but nothing can ring this device.
+2. Copy your `google-services.json` into `samples/sample-app-ringing/`. The file is git-ignored. It is required to
+   build: the module applies the Google Services plugin, and the build fails without the file.
 3. Run the `sample-app-ringing` module on two devices.
 4. On first launch, enter your **App ID**, **Auth Key**, **Region** and **Push Provider ID**. You can instead set
    them in `utils/AppConstants.kt` before building.
@@ -74,7 +74,9 @@ Duplicate events and double taps change nothing.
 3. When the user answers, the SDK opens `CallActivity` with the answered call in `CallBundles`. It joins by session
    ID, so only the media and the call UI are left to set up.
 4. On the home screen, the app checks whether anything would silence a ring and offers the matching settings page:
-   full-screen notifications revoked, the incoming-call channel muted, or Do Not Disturb.
+   full-screen notifications revoked, the incoming-call channel muted, or Do Not Disturb. The SDK can also report
+   `RingReadiness.MICROPHONE_DENIED` (the microphone was refused when answering, so calls still ring but join
+   muted); the sample does not prompt for that one.
 
 **Signing out** waits for `CometChatPushNotifications.unregisterToken()` before logging out of the SDKs. The
 request is authenticated by the session being logged out, and without it this device keeps ringing for the user

@@ -19,4 +19,3 @@ rootProject.name = "calls-sdk-android"
 
 include(":samples:sample-app")
 include(":samples:sample-app-ringing")
-include(":samples:sample-app-voip")

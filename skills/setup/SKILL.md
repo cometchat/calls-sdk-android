@@ -12,7 +12,7 @@ Install and initialize the CometChat Calls SDK v5 in an Android project. Covers 
 
 ## Prerequisites
 
-- Android project with minSdk 26+, compileSdk 35
+- Android project with minSdk 26+, compileSdk 35 (compileSdk 36 and Android Gradle Plugin 8.9.1+ if you also add the Push Notifications SDK 2.0 for ringing: its `androidx.core` 1.18.0 dependency requires them)
 - App ID and Region from CometChat Dashboard
 
 ## Key Imports
@@ -48,8 +48,10 @@ dependencies {
     // CometChat Calls SDK v5
     implementation("com.cometchat:calls-sdk-android:5.1.0")
 
-    // If using ringing (dual-SDK), also add Chat SDK:
-    // implementation("com.cometchat:chat-sdk-android:4.0.+")
+    // If using ringing, also add the Push Notifications SDK and FCM (see the ringing-integration skill):
+    // implementation("com.cometchat:push-notifications-android:2.0.0")
+    // implementation("com.cometchat:push-notifications-calls-android:2.0.0")
+    // implementation("com.google.firebase:firebase-messaging:24.1.0")
 }
 ```
 
@@ -131,7 +133,7 @@ CometChatCalls.login(uid, apiKey, object : CometChatCalls.CallbackListener<CallU
 
 ## Sample App Reference
 
-- `PublicSampleApps/calls-sdk-android/settings.gradle.kts` — Cloudsmith maven config
-- `PublicSampleApps/calls-sdk-android/samples/sample-app-ringing/build.gradle.kts` — dependency declarations
-- `PublicSampleApps/calls-sdk-android/gradle.properties` — Jetifier enabled
-- `PublicSampleApps/calls-sdk-android/samples/sample-app-ringing/src/main/kotlin/com/cometchat/samplecallsringing/RingingApplication.kt` — Application class
+- `settings.gradle.kts` — Cloudsmith maven config
+- `samples/sample-app-ringing/build.gradle.kts` — dependency declarations
+- `gradle.properties` — Jetifier enabled
+- `samples/sample-app-ringing/src/main/kotlin/com/cometchat/samplecallsringing/RingingApplication.kt` — Application class

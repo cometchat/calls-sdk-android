@@ -9,8 +9,8 @@ inclusion: manual
 > **On Calls SDK 5.1 or later, start with the `ringing-integration` skill instead.** The Push Notifications
 > SDK 2.0 rings incoming calls itself: FCM, the ringing notification, the full-screen screen over the lock screen,
 > answer, decline and missed calls, in every app state. That is what `samples/sample-app-ringing` uses. This
-> skill covers building the incoming side yourself with Android's Telecom framework, as `samples/sample-app-voip`
-> does.
+> skill covers building the incoming side yourself with Android's Telecom framework. No sample app for this
+> approach is published in this repository.
 
 ## Overview
 
@@ -18,10 +18,10 @@ Native VoIP calling using Android's Telecom framework (`ConnectionService`). Sho
 
 ## Prerequisites
 
-- Chat SDK v4 (`com.cometchat:chat-sdk-android:4.0.+`) + Calls SDK v5 (`com.cometchat:calls-sdk-android:5.1.0`) integrated
+- Chat SDK v4 (`com.cometchat:chat-sdk-android:4.2.0`) + Calls SDK v5 (`com.cometchat:calls-sdk-android:5.1.0`) integrated
 - Firebase Cloud Messaging (FCM) configured with `com.google.gms.google-services` plugin
 - Push notifications enabled in CometChat Dashboard
-- Android 8.0+ (API 26+), compileSdk 35
+- Android 8.0+ (API 26+), compileSdk 35 (36, with Android Gradle Plugin 8.9.1+, if the app also adds the Push Notifications SDK 2.0)
 
 ## Key Components
 
@@ -519,14 +519,5 @@ CallNotificationManager.cancelNotification(activity)
 
 ## Sample App Reference
 
-- `samples/sample-app-voip/` — Complete working VoIP sample app demonstrating all patterns above
-  - `voip/CallFirebaseMessagingService.kt` — FCM push handling with payload parsing
-  - `voip/PhoneAccountManager.kt` — PhoneAccount registration and status checks
-  - `voip/CallConnectionService.kt` — ConnectionService bridging Telecom framework
-  - `voip/CallConnection.kt` — Individual call representation (accept/reject/disconnect)
-  - `voip/CallNotificationManager.kt` — TelecomManager routing with fallback notification
-  - `voip/CallActionReceiver.kt` — Fallback notification accept/decline handler
-  - `voip/CallConnectionHolder.kt` — Singleton for active connection access
-  - `data/model/CallData.kt` — Parcelable call metadata
-  - `VoIPApplication.kt` — Application class with foreground tracking and global CallListener
-  - `ui/activity/CallActivity.kt` — Call session with SessionSettings mapping
+No VoIP sample app is published in this repository. For incoming calls without building the Telecom side yourself,
+see `samples/sample-app-ringing` and the `ringing-integration` skill.

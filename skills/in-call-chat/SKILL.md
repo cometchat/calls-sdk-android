@@ -15,7 +15,7 @@ Add real-time text messaging during calls. Uses a CometChat Group (GUID = sessio
 - Calls SDK + Chat SDK + UI Kit integrated
 - Dependencies:
   ```kotlin
-  implementation("com.cometchat:chat-sdk-android:4.0.+")
+  implementation("com.cometchat:chat-sdk-android:4.2.0")
   implementation("com.cometchat:calls-sdk-android:5.1.0")
   implementation("com.cometchat:chat-uikit-android:4.+")
   ```

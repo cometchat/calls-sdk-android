@@ -105,9 +105,9 @@ for (callLog in callLogs) {
 - `setCallDirection()` takes `"incoming"` or `"outgoing"`
 - `setCallCategory()` takes `"call"` or `"meet"`
 - Create a new `CallLogRequest` to reset pagination
-- The sample app uses Chat SDK's `MessagesRequest` for call logs — the Calls SDK's `CallLogRequest` provides richer data
+- The ringing sample lists call history with the Calls SDK's `CallLogRequest`
 
 ## Sample App Reference
 
-- `Repository.kt` — `fetchCallLogs()` (uses Chat SDK approach)
-- For Calls SDK approach, use `CallLogRequest` as shown above
+- `samples/sample-app-ringing/src/main/kotlin/com/cometchat/samplecallsringing/ui/fragments/CallLogsFragment.kt` — the History tab: `CallLogRequest` paging with `fetchNext()`
+- `samples/sample-app-ringing/src/main/kotlin/com/cometchat/samplecallsringing/data/repository/Repository.kt` — `fetchCallStatus()`: a `CallLogRequest` lookup of one call's status while it rings

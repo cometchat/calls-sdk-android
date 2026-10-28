@@ -38,6 +38,18 @@ import com.cometchat.calls.listeners.ButtonClickListener
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 ```
 
+Declare the service too. The Calls SDK 5.1 manifest does not declare `CometChatOngoingCallService`:
+
+```xml
+<!-- Keeps a joined call alive in the background with an ongoing-call notification. The Calls
+     SDK does not declare it: without this entry CometChatOngoingCallService.launch() finds no
+     service and the call drops when the app leaves the screen. -->
+<service
+    android:name="com.cometchat.calls.services.CometChatOngoingCallService"
+    android:foregroundServiceType="camera|microphone|mediaPlayback"
+    android:exported="false" />
+```
+
 ### 2. Start/Stop Service
 
 ```kotlin
@@ -142,8 +154,6 @@ CallNotificationManager.cancelNotification(this@CallActivity)
 finish()
 ```
 
-See the `sample-app-voip` CallActivity for the full VoIP-integrated pattern.
-
 ## API Reference
 
 | Method | Description |
@@ -155,6 +165,7 @@ See the `sample-app-voip` CallActivity for the full VoIP-integrated pattern.
 ## Gotchas
 
 - The notification channel ID **must** be `"CometChat_Call_Ongoing_Conference"`
+- Without the `<service>` entry in your manifest, `launch()` finds no service and the call drops in the background
 - Always call `abort()` in `onDestroy()` to prevent leaked services
 - Always remove `CometChat.CallListener` in `onDestroy()` to prevent leaks
 - This is for keeping **active** calls alive — for receiving calls when app is killed, use VoIP Calling
@@ -164,5 +175,5 @@ See the `sample-app-voip` CallActivity for the full VoIP-integrated pattern.
 
 ## Sample App Reference
 
+- `sample-app-ringing` — `AndroidManifest.xml` — the `CometChatOngoingCallService` declaration
 - `sample-app-ringing` — `CallActivity.kt` — basic foreground service pattern with `launch()` in `onSessionJoined()`, `abort()` in `onSessionLeft()` and `onDestroy()`
-- `sample-app-voip` — `CallActivity.kt` — full VoIP-integrated pattern with foreground service + CallConnection cleanup + notification cancellation on every terminal state

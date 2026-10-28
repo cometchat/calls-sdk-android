@@ -28,6 +28,7 @@ implementation("com.cometchat:push-notifications-calls-android:2.0.0")
 implementation("com.google.firebase:firebase-messaging:24.1.0")
 ```
 
+- Build: **compileSdk 36** and **Android Gradle Plugin 8.9.1+**. The Push SDK brings `androidx.core` 1.18.0, whose AAR metadata sets `minCompileSdk=36` and `minAndroidGradlePluginVersion=8.9.1`. Use Kotlin 2.1: the Push SDK and `androidx.core` 1.18.0 depend on `kotlin-stdlib` 2.1.20, and the sample builds with AGP 8.11.2 and Kotlin 2.1.20
 - Calls SDK initialized and the user logged in (`CometChatCalls.login`)
 - An **FCM push provider** on the dashboard (Notifications → Push), using the same Firebase project as your `google-services.json`. Its **provider ID** goes in the push SDK configuration
 - Runtime permissions **before** `initiateCall`: `RECORD_AUDIO`, plus `CAMERA` for video. The media session is prepared straight away
@@ -152,6 +153,18 @@ CometChatCalls.joinSession(sessionId, CallSettings.make(name, isVideo, !isGroup)
     })
 ```
 
+The Calls SDK 5.1 manifest does not declare `CometChatOngoingCallService` (it does merge the `FOREGROUND_SERVICE_CAMERA`, `_MICROPHONE` and `_MEDIA_PLAYBACK` permissions). Declare the service in your app's manifest, as the sample does:
+
+```xml
+<!-- Keeps a joined call alive in the background with an ongoing-call notification. The Calls
+     SDK does not declare it: without this entry CometChatOngoingCallService.launch() finds no
+     service and the call drops when the app leaves the screen. -->
+<service
+    android:name="com.cometchat.calls.services.CometChatOngoingCallService"
+    android:foregroundServiceType="camera|microphone|mediaPlayback"
+    android:exported="false" />
+```
+
 ## 6. Cancel, timeout and decline
 
 ```kotlin
@@ -190,9 +203,12 @@ In `AUTO` mode the SDK shows the ringing notification and opens your incoming-ca
 
 ```kotlin
 class IncomingCallActivity : AppCompatActivity() {
+    private lateinit var sessionId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val call = CallBundles.getCall(intent) ?: return finish()
+        sessionId = call.sessionId
         // call.callerName, call.callerAvatarUrl, call.isVideo, call.isPeerCall (false = group call)
 
         // Ring ended for any reason: cancelled, timed out, answered or declined elsewhere.
@@ -205,7 +221,9 @@ class IncomingCallActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        CometChatCallNotifications.onIncomingCallScreenClosed(sessionId)
+        if (::sessionId.isInitialized) {
+            CometChatCallNotifications.onIncomingCallScreenClosed(sessionId)
+        }
     }
 }
 ```
@@ -221,6 +239,8 @@ Some settings silence a ring and nothing reports an error:
 - the incoming-call channel muted,
 - Do Not Disturb.
 
+One more spoils the answer instead: the microphone was refused when answering (`MICROPHONE_DENIED`). Calls still ring, but an answered call joins muted until it is granted in the app's settings.
+
 The SDK can tell you which one applies:
 
 ```kotlin
@@ -228,8 +248,9 @@ CometChatPushNotifications.ensureRingReady(activity, object : PNCallback<RingRea
     override fun onResult(result: PNResult<RingReadiness>) {
         val readiness = result.valueOrNull() ?: return
         if (readiness != RingReadiness.READY && readiness != RingReadiness.NOTIFICATIONS_OFF) {
-            val settings = CometChatPushNotifications.settingsIntentFor(activity, readiness)
-            // explain, and offer startActivity(settings)
+            // FSI_REVOKED, CHANNEL_MUTED, DND_BLOCKING or MICROPHONE_DENIED
+            val settings = CometChatPushNotifications.settingsIntentFor(activity, readiness)  // Intent?
+            // explain; if (settings != null), offer startActivity(settings)
         }
     }
 })
