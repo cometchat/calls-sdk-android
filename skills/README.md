@@ -52,7 +52,7 @@ Each skill has a `description` field in its YAML frontmatter that lists trigger 
 
 ## Compatibility
 
-- CometChat Calls SDK v5 (5.0.4+)
+- CometChat Calls SDK v5 (5.1.0+)
 - CometChat Push Notifications SDK 2.0 — rings incoming calls (`ringing-integration`)
 - CometChat Chat SDK v4 — user and group lists in the samples; signalling in `sample-app-voip`
 - Kotlin, Java 17

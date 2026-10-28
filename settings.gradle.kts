@@ -12,8 +12,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://dl.cloudsmith.io/public/cometchat/cometchat/maven/") }
-        // Push notifications SDKs (push-notifications-android / push-notifications-calls-android).
-        maven { url = uri("https://dl.cloudsmith.io/public/cometchat/call-team/maven/") }
     }
 }
 

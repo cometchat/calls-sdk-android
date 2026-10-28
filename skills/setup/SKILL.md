@@ -8,7 +8,7 @@ inclusion: manual
 
 ## Overview
 
-Install and initialize the CometChat Calls SDK v5 (beta) in an Android project. Covers Cloudsmith maven repository, Gradle dependencies, manifest permissions, Jetifier, and `CometChatCalls.init()`.
+Install and initialize the CometChat Calls SDK v5 in an Android project. Covers Cloudsmith maven repository, Gradle dependencies, manifest permissions, Jetifier, and `CometChatCalls.init()`.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ In app-level `build.gradle.kts`:
 ```kotlin
 dependencies {
     // CometChat Calls SDK v5
-    implementation("com.cometchat:calls-sdk-android:5.0.4")
+    implementation("com.cometchat:calls-sdk-android:5.1.0")
 
     // If using ringing (dual-SDK), also add Chat SDK:
     // implementation("com.cometchat:chat-sdk-android:4.0.+")

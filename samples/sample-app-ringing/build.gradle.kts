@@ -6,7 +6,7 @@ plugins {
 }
 
 // The push SDK has no runtime version constant, so the profile screen reads it from BuildConfig.
-val pushSdkVersion = "2.0.0-beta.3"
+val pushSdkVersion = "2.0.0"
 
 android {
     namespace = "com.cometchat.samplecallsringing"
@@ -68,7 +68,7 @@ dependencies {
     implementation("com.cometchat:chat-sdk-android:4.2.0")
 
     // CometChat Calls SDK: initiateCall / endCall, sessions and call logs
-    implementation("com.cometchat:calls-sdk-android:5.1.0-beta.2")
+    implementation("com.cometchat:calls-sdk-android:5.1.0")
 
     // Push Notifications SDK: rings incoming calls delivered through FCM, in every app state
     implementation("com.cometchat:push-notifications-android:$pushSdkVersion")
