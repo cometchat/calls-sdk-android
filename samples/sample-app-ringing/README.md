@@ -138,6 +138,37 @@ adb shell am broadcast -n com.cometchat.samplecallsringing/.debug.DebugIncomingC
     --es sessionId <session-id> --es callAction cancelled --es receiver <your-uid>
 ```
 
+## Add ringing to your app
+
+The SDKs are on the CometChat Maven repository. Add it in `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://dl.cloudsmith.io/public/cometchat/cometchat/maven/") }
+    }
+}
+```
+
+Apply the Google Services plugin (`id("com.google.gms.google-services") version "4.4.2"` in the root
+`build.gradle.kts`, and `id("com.google.gms.google-services")` in the app module), then add the SDKs to the app module:
+
+```kotlin
+dependencies {
+    implementation("com.cometchat:calls-sdk-android:5.1.0")
+    implementation("com.cometchat:push-notifications-android:2.0.0")
+    implementation("com.cometchat:push-notifications-calls-android:2.0.0")
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
+}
+```
+
+Your app needs `minSdk` 26, `compileSdk` 36 and Android Gradle Plugin 8.9.1 or later. The Chat SDK is optional: this
+sample uses it only for the user and group lists. For the integration steps (configuring the push SDK, registering
+the token, placing and answering calls), follow the [`ringing-integration`](../../skills/ringing-integration/SKILL.md)
+skill or this app's code.
+
 ## Dependencies
 
 - `com.cometchat:calls-sdk-android` 5.1: calls, sessions and call logs
