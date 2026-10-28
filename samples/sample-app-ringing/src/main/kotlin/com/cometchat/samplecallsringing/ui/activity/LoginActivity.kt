@@ -56,6 +56,9 @@ class LoginActivity : AppCompatActivity() {
 
         // Check if already logged in
         if (CometChat.getLoggedInUser() != null) {
+            // A saved session (e.g. after the credentials screen): register this phone's push token,
+            // as SplashActivity does.
+            PushNotifications.registerToken()
             navigateToHome()
             return
         }

@@ -5,38 +5,35 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.cometchat.calls.core.CometChatCalls
-import com.cometchat.calls.exceptions.CometChatException as CallsException
 import com.cometchat.calls.utils.CometChatUtils
 import com.cometchat.chat.constants.CometChatConstants
 import com.cometchat.chat.core.CometChat
 import com.cometchat.chat.exceptions.CometChatException as ChatException
 import com.cometchat.samplecallsringing.BuildConfig
 import com.cometchat.samplecallsringing.R
-import com.cometchat.samplecallsringing.data.repository.Repository
 import com.cometchat.samplecallsringing.databinding.ActivityProfileBinding
 import com.cometchat.samplecallsringing.databinding.ItemInfoRowBinding
-import com.cometchat.samplecallsringing.push.PushNotifications
 import com.cometchat.samplecallsringing.utils.AppConstants
 import com.cometchat.samplecallsringing.utils.AppUtils
 import com.cometchat.samplecallsringing.utils.Appearance
+import com.cometchat.samplecallsringing.utils.SignOut
 
 /** Who is signed in, the appearance, the app's credentials and SDK versions, and signing out. */
 class ProfileActivity : AppCompatActivity() {
 
-    companion object {
-        private const val TAG = "ProfileActivity"
-    }
-
     private lateinit var binding: ActivityProfileBinding
+    // Enabled while signing out: swallows Back (toolbar and system) until the result is in.
+    private val blockBack = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() = Unit
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +45,8 @@ class ProfileActivity : AppCompatActivity() {
             insets
         }
         binding.toolbar.toolbar.setTitle(R.string.profile)
-        binding.toolbar.toolbar.setNavigationOnClickListener { finish() }
+        binding.toolbar.toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        onBackPressedDispatcher.addCallback(this, blockBack)
 
         bindUser()
         bindAppearance()
@@ -120,16 +118,15 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Removes this phone's push token first, and logs out only once that worked: the request is
-     * authenticated by the session being logged out, and without it this phone keeps ringing for
-     * the user who left. On failure the user chooses to retry or to log out anyway.
+     * Removes this phone's push token, then logs out ([SignOut]). On failure the user chooses to
+     * retry or to log out anyway. Once the token is removed the logout completes even if this
+     * screen goes away; only the UI below needs the screen.
      */
     private fun signOut() {
-        binding.btnLogout.isEnabled = false
-        PushNotifications.unregisterToken { success ->
-            if (isFinishing || isDestroyed) return@unregisterToken
-            if (success) logoutCalls() else offerUnregisterRetry()
-        }
+        setSigningOut(true)
+        SignOut.unregisterThenLogout(this, onUnregisterFailed = {
+            if (!isFinishing && !isDestroyed) offerUnregisterRetry()
+        }, onDone = ::onSignedOut)
     }
 
     private fun offerUnregisterRetry() {
@@ -137,44 +134,28 @@ class ProfileActivity : AppCompatActivity() {
             .setTitle(R.string.unregister_failed_title)
             .setMessage(R.string.unregister_failed_message)
             .setCancelable(false)
-            .setNegativeButton(R.string.sign_out_anyway) { _, _ -> logoutCalls() }
+            .setNegativeButton(R.string.sign_out_anyway) { _, _ -> SignOut.logout(this, ::onSignedOut) }
             .setPositiveButton(R.string.retry) { _, _ -> signOut() }
-            .setNeutralButton(R.string.cancel) { _, _ -> binding.btnLogout.isEnabled = true }
+            .setNeutralButton(R.string.cancel) { _, _ -> setSigningOut(false) }
             .show()
     }
 
-    private fun logoutCalls() {
-        Repository.logoutCallsUser(object : CometChatCalls.CallbackListener<String>() {
-            override fun onSuccess(message: String) = logoutChat()
-
-            override fun onError(e: CallsException) {
-                // The Chat session still has to go, or the next launch signs this user back in.
-                Log.e(TAG, "Calls SDK logout failed: ${e.message}")
-                logoutChat()
-            }
-        })
+    private fun onSignedOut(error: ChatException?) {
+        if (isFinishing || isDestroyed) return
+        if (error == null) {
+            startActivity(Intent(this, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finish()
+        } else {
+            setSigningOut(false)
+            Toast.makeText(this, getString(R.string.sign_out_failed, error.message), Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun logoutChat() {
-        Repository.logoutChatUser(object : CometChat.CallbackListener<String>() {
-            override fun onSuccess(message: String) {
-                Log.d(TAG, "Signed out")
-                AppUtils.clearLoggedInUid(this@ProfileActivity)
-                runOnUiThread {
-                    startActivity(Intent(this@ProfileActivity, LoginActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    })
-                    finish()
-                }
-            }
-
-            override fun onError(e: ChatException) {
-                Log.e(TAG, "Chat SDK logout failed: ${e.message}")
-                runOnUiThread {
-                    binding.btnLogout.isEnabled = true
-                    Toast.makeText(this@ProfileActivity, getString(R.string.sign_out_failed, e.message), Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
+    /** While signing out, the button and Back are disabled so the screen stays for the result. */
+    private fun setSigningOut(signingOut: Boolean) {
+        binding.btnLogout.isEnabled = !signingOut
+        blockBack.isEnabled = signingOut
     }
 }
