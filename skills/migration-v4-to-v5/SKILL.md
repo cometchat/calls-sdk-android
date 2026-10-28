@@ -27,7 +27,7 @@ Calls SDK v5 is a drop-in replacement for v4. All v4 APIs are preserved as depre
 ```groovy
 // build.gradle.kts
 -implementation("com.cometchat:calls-sdk-android:4.x.x")
-+implementation("com.cometchat:calls-sdk-android:5.0.4")
++implementation("com.cometchat:calls-sdk-android:5.1.0")
 ```
 
 If using CometChat UI Kits, just updating the version is sufficient — the UI Kit works through the deprecated compatibility layer.
@@ -181,7 +181,7 @@ Static `CometChatCalls.*` methods → instance methods on `CallSession`.
 
 | v4 Static Method | v5 CallSession Method |
 |---|---|
-| `CometChatCalls.endSession()` | `callSession.leaveSession()` |
+| `CometChatCalls.endSession()` | `callSession.leave()` (5.1+; `leaveSession()` is its deprecated alias) |
 | `CometChatCalls.switchCamera()` | `callSession.switchCamera()` |
 | `CometChatCalls.muteAudio(true)` | `callSession.muteAudio()` |
 | `CometChatCalls.muteAudio(false)` | `callSession.unmuteAudio()` |

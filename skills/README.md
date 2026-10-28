@@ -20,7 +20,7 @@ cp -r skills/ /path/to/your/project/skills/
 |-------|-------------|
 | `setup` | SDK dependencies, Cloudsmith maven, CallAppSettings, init, permissions, Jetifier |
 | `join-session` | CometChatCalls.joinSession, SessionSettingsBuilder, voice vs video |
-| `ringing-integration` | Dual SDK (Chat + Calls), initiateCall, accept/reject/cancel, incoming/outgoing |
+| `ringing-integration` | Calls SDK 5.1 `initiateCall` / `endCall` + Push Notifications SDK 2.0: 1:1 and group ringing, incoming calls in every app state, push tokens |
 | `session-settings` | All SessionSettingsBuilder options: layouts, session type, audio mode, hide buttons |
 | `event-listeners` | SessionStatus, Participant, Media, ButtonClick, Layout listeners |
 | `call-logs` | CallLogRequest, fetching and displaying call history |
@@ -39,7 +39,7 @@ cp -r skills/ /path/to/your/project/skills/
 | `screen-sharing` | Screen share setup, MediaProjection permissions |
 | `picture-in-picture` | PiP mode configuration |
 | `background-handling` | CometChatOngoingCallService, foreground service |
-| `voip-calling` | VoIP push notifications, ConnectionService |
+| `voip-calling` | Optional: building the incoming side yourself on Telecom (ConnectionService / PhoneAccount), Push SDK 2.0 in `CallMode.MANUAL` |
 | `audio-controls` | Mute/unmute, audio device switching |
 | `video-controls` | Camera on/off, switch camera |
 | `participant-management` | Participant list, mute/kick, raise hand |
@@ -52,8 +52,9 @@ Each skill has a `description` field in its YAML frontmatter that lists trigger 
 
 ## Compatibility
 
-- CometChat Calls SDK v5 (5.0.4+)
-- CometChat Chat SDK v4 (4.0.+) — required for ringing and VoIP
+- CometChat Calls SDK v5 (5.1.0+)
+- CometChat Push Notifications SDK 2.0 — rings incoming calls (`ringing-integration`)
+- CometChat Chat SDK v4 — user and group lists in the samples (not part of the call flow)
 - Kotlin, Java 17
-- Gradle KTS, compileSdk 35, minSdk 26
+- Gradle KTS, minSdk 26, compileSdk 35 (compileSdk 36 and AGP 8.9.1+ with the Push Notifications SDK 2.0)
 - Works with: Kiro, Claude Code, Cursor, Copilot, and other AI coding assistants that support the skills ecosystem

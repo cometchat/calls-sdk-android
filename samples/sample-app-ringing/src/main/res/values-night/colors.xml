@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark values for the tokens in values/colors.xml. -->
+<resources>
+    <!-- Surfaces -->
+    <color name="background">#1A1D21</color>
+    <color name="surface">#222529</color>
+    <color name="background2">#26282C</color>
+    <color name="stroke_default">#35373B</color>
+    <color name="code_background">#2C2D30</color>
+
+    <!-- Brand -->
+    <color name="primary_light">#246D5DF6</color>
+
+    <!-- Text -->
+    <color name="text_primary">#D1D2D3</color>
+    <color name="text_secondary">#9A9B9D</color>
+    <color name="text_tertiary">#6E6F71</color>
+    <color name="text_disabled">#4C4C4C</color>
+
+    <!-- Status -->
+    <color name="status_online">#2BAC76</color>
+    <color name="status_success_bg">#1A2BAC76</color>
+    <color name="error">#E01E5A</color>
+    <color name="status_error_bg">#1AE01E5A</color>
+    <color name="status_neutral_bg">#26282C</color>
+    <color name="call_accept">#2BAC76</color>
+    <color name="call_reject">#E01E5A</color>
+</resources>

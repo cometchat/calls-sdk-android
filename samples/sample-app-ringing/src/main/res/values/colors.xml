@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Light values for every colour the app uses; values-night/colors.xml holds the dark ones. Layouts
+     and code use these names and never a literal, so the whole app follows the appearance setting. -->
 <resources>
-    <color name="ic_launcher_background">#6851D6</color>
-    <color name="primary">#6851D6</color>
-    <color name="primary_light">#F0EDFA</color>
+    <color name="ic_launcher_background">#6D5DF6</color>
+
+    <!-- Surfaces -->
     <color name="background">#FFFFFF</color>
-    <color name="text_primary">#141414</color>
-    <color name="text_secondary">#727272</color>
-    <color name="text_tertiary">#A1A1A1</color>
-    <color name="stroke_default">#E8E8E8</color>
-    <color name="error">#F44336</color>
-    <color name="call_accept">#4CAF50</color>
-    <color name="call_reject">#F44336</color>
-    <color name="call_background">#1A1A2E</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="background2">#F5F5F5</color>
+    <color name="stroke_default">#ECECEC</color>
+    <color name="code_background">#F5F5F5</color>
+
+    <!-- Brand -->
+    <color name="primary">#6D5DF6</color>
+    <color name="primary_light">#146D5DF6</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#181A20</color>
+    <color name="text_secondary">#7E7E7E</color>
+    <color name="text_tertiary">#9E9E9E</color>
+    <color name="text_disabled">#C3CBD6</color>
+
+    <!-- Status -->
+    <color name="status_online">#2EB57D</color>
+    <color name="status_success_bg">#1A2EB57D</color>
+    <color name="error">#D9235E</color>
+    <color name="status_error_bg">#1AD9235E</color>
+    <color name="status_neutral_bg">#F5F5F5</color>
+    <color name="call_accept">#2EB57D</color>
+    <color name="call_reject">#D9235E</color>
+
+    <!-- Call screens stay dark in both themes: they sit over video. -->
+    <color name="call_background">#1A1D21</color>
+    <color name="call_text_primary">#FFFFFF</color>
+    <color name="call_text_secondary">#B3FFFFFF</color>
 </resources>

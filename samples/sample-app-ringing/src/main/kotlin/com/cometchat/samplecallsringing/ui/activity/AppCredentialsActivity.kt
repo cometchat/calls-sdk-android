@@ -25,6 +25,7 @@ class AppCredentialsActivity : AppCompatActivity() {
         applyWindowInsets()
         initViewModel()
         initClickListeners()
+        binding.etPushProviderId.setText(AppUtils.getPushProviderId(this))
     }
 
     private fun applyWindowInsets() {
@@ -55,11 +56,16 @@ class AppCredentialsActivity : AppCompatActivity() {
                 binding.etAuthKey.text.toString().isEmpty() -> {
                     Toast.makeText(this, R.string.invalid_auth_key, Toast.LENGTH_SHORT).show()
                 }
+                // Required: registering the push token fails without it, so no call would ring.
+                binding.etPushProviderId.text.toString().isBlank() -> {
+                    Toast.makeText(this, R.string.invalid_push_provider_id, Toast.LENGTH_SHORT).show()
+                }
                 else -> {
                     viewModel.initSDKs(
                         this,
-                        binding.etAppId.text.toString(),
-                        binding.etAuthKey.text.toString()
+                        binding.etAppId.text.toString().trim(),
+                        binding.etAuthKey.text.toString().trim(),
+                        binding.etPushProviderId.text.toString().trim()
                     )
                 }
             }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp">
+
+    <com.cometchat.samplecallsringing.ui.views.AvatarView
+        android:id="@+id/iv_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.App.BodyStrong"
+            tools:text="Design review" />
+
+        <TextView
+            android:id="@+id/tv_members"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.App.Caption"
+            tools:text="4 members" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_audio_call"
+        style="@style/App.CallButton"
+        android:contentDescription="@string/audio_call"
+        android:src="@drawable/ic_call_audio" />
+
+    <ImageButton
+        android:id="@+id/btn_video_call"
+        style="@style/App.CallButton"
+        android:layout_marginStart="10dp"
+        android:contentDescription="@string/video_call"
+        android:src="@drawable/ic_call_video" />
+
+</LinearLayout>

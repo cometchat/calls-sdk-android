@@ -1,84 +1,59 @@
 package com.cometchat.samplecallsringing.ui.adapters
 
-import android.text.format.DateUtils
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.cometchat.calls.core.CometChatCalls
 import com.cometchat.calls.model.CallLog
-import com.cometchat.calls.model.CallUser
-import com.cometchat.samplecallsringing.R
+import com.cometchat.samplecallsringing.calls.CallLogDisplay
 import com.cometchat.samplecallsringing.databinding.ItemCallLogBinding
 
+/** One row per call: who, voice/video/group, the outcome, when, and how long. */
 class CallLogsAdapter(
-    private val callLogs: MutableList<CallLog>
+    private val onClick: (CallLog) -> Unit
 ) : RecyclerView.Adapter<CallLogsAdapter.CallLogViewHolder>() {
+
+    private val callLogs = mutableListOf<CallLog>()
 
     inner class CallLogViewHolder(val binding: ItemCallLogBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CallLogViewHolder {
-        val binding = ItemCallLogBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CallLogViewHolder(binding)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CallLogViewHolder =
+        CallLogViewHolder(ItemCallLogBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: CallLogViewHolder, position: Int) {
-        val callLog = callLogs[position]
+        val log = callLogs[position]
+        val context = holder.itemView.context
+        val title = CallLogDisplay.title(context, log)
+        val counterpart = CallLogDisplay.counterpart(log)
+        val status = CallLogDisplay.status(log)
+        val statusColor = ContextCompat.getColor(context, status.color)
 
         with(holder.binding) {
-            // Call type icon
-            val isVideo = callLog.type == "video"
-            ivCallType.setImageResource(
-                if (isVideo) R.drawable.ic_call_video_log else R.drawable.ic_call_audio_log
-            )
-
-            // Caller/receiver name
-            val loggedInUid = CometChatCalls.getLoggedInUser()?.uid
-            val initiator = callLog.initiator as? CallUser
-            val receiver = callLog.receiver as? CallUser
-            val isOutgoing = initiator?.uid == loggedInUid
-            val displayName = if (isOutgoing) {
-                receiver?.name ?: holder.itemView.context.getString(R.string.unknown)
-            } else {
-                initiator?.name ?: holder.itemView.context.getString(R.string.unknown)
-            }
-            tvName.text = displayName
-
-            // Call status
-            tvCallStatus.text = formatCallStatus(callLog.status, isOutgoing)
-
-            // Timestamp
-            val timestamp = callLog.initiatedAt
-            if (timestamp > 0) {
-                tvTimestamp.text = DateUtils.getRelativeTimeSpanString(
-                    timestamp * 1000,
-                    System.currentTimeMillis(),
-                    DateUtils.MINUTE_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_RELATIVE
-                )
-            } else {
-                tvTimestamp.text = ""
-            }
+            ivAvatar.set(title, counterpart?.avatar, initialsCount = if (counterpart?.isGroup == true) 2 else 1)
+            tvName.text = title
+            tvKind.setText(CallLogDisplay.kind(log))
+            tvCallStatus.setText(status.label)
+            tvCallStatus.setTextColor(statusColor)
+            TextViewCompat.setCompoundDrawableTintList(tvCallStatus, ColorStateList.valueOf(statusColor))
+            tvTimestamp.text = CallLogDisplay.dateTime(context, log.initiatedAt)
+            tvDuration.text = CallLogDisplay.duration(context, log.totalDurationInMinutes)
+            root.setOnClickListener { onClick(log) }
         }
     }
 
     override fun getItemCount(): Int = callLogs.size
 
-    fun updateList(logs: List<CallLog>) {
+    fun submit(logs: List<CallLog>) {
         callLogs.clear()
         callLogs.addAll(logs)
         notifyDataSetChanged()
     }
 
-    private fun formatCallStatus(status: String?, isOutgoing: Boolean): String {
-        return when (status) {
-            "initiated" -> if (isOutgoing) "Outgoing" else "Incoming"
-            "ongoing" -> "Ongoing"
-            "unanswered" -> "Missed"
-            "rejected" -> "Rejected"
-            "cancelled" -> "Cancelled"
-            "busy" -> "Busy"
-            "ended" -> "Ended"
-            else -> status ?: "Unknown"
-        }
+    fun append(logs: List<CallLog>) {
+        val start = callLogs.size
+        callLogs.addAll(logs)
+        notifyItemRangeInserted(start, logs.size)
     }
 }

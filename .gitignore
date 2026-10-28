@@ -99,3 +99,6 @@ obj/
 
 # VoIP sample app (not public yet)
 samples/sample-app-voip/
+
+# Firebase config for the ringing sample (team project; local only, never commit)
+samples/sample-app-ringing/google-services.json

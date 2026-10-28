@@ -4,8 +4,12 @@
     <!-- Required permissions for video calling -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Voice calls work without a camera. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Incoming calls open their full-screen ring over the lock screen. -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <!-- Foreground service permissions for ongoing calls -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -47,15 +51,28 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- Home Screen - Tabbed (Users + Call Logs) -->
+        <!-- Home: Users, Groups and History tabs -->
         <activity
             android:name=".ui.activity.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <!-- User Detail / Profile Screen -->
+        <!-- Profile: opened from your avatar -->
         <activity
-            android:name=".ui.activity.UserDetailActivity"
+            android:name=".ui.activity.ProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Creates a group from picked members, then rings it -->
+        <activity
+            android:name=".ui.activity.NewGroupCallActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- One call from History -->
+        <activity
+            android:name=".ui.activity.CallDetailsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
@@ -63,6 +80,7 @@
         <activity
             android:name=".ui.activity.OutgoingCallActivity"
             android:exported="false"
+            android:theme="@style/Theme.SampleCallsRinging.Call"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
@@ -70,15 +88,39 @@
         <activity
             android:name=".ui.activity.IncomingCallActivity"
             android:exported="false"
+            android:theme="@style/Theme.SampleCallsRinging.Call"
             android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:screenOrientation="portrait" />
 
         <!-- Call Session Screen -->
         <activity
             android:name=".ui.activity.CallActivity"
             android:exported="false"
+            android:theme="@style/Theme.SampleCallsRinging.Call"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:screenOrientation="portrait"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
+
+        <!-- Incoming calls ring through the push notifications SDK; FCM delivers the ring here, even when
+             the app is not running. -->
+        <service
+            android:name=".push.RingingMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Keeps a joined call alive in the background with an ongoing-call notification. The Calls
+             SDK does not declare it: without this entry CometChatOngoingCallService.launch() finds no
+             service and the call drops when the app leaves the screen. -->
+        <service
+            android:name="com.cometchat.calls.services.CometChatOngoingCallService"
+            android:foregroundServiceType="camera|microphone|mediaPlayback"
+            android:exported="false" />
 
     </application>
 

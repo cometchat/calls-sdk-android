@@ -1,28 +1,22 @@
 package com.cometchat.samplecallsringing.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
-import com.cometchat.chat.core.CometChat
-import com.cometchat.chat.exceptions.CometChatException
-import com.cometchat.chat.core.Call
+import com.cometchat.pushnotification.calls.CallBundles
+import com.cometchat.pushnotification.calls.CometChatCallNotifications
+import com.cometchat.pushnotification.calls.IncomingCall
 import com.cometchat.samplecallsringing.R
-import com.cometchat.samplecallsringing.data.repository.Repository
 import com.cometchat.samplecallsringing.databinding.ActivityIncomingCallBinding
 
+/**
+ * The callee's ring screen. The push notifications SDK launches it (see
+ * [com.cometchat.samplecallsringing.push.PushNotifications]) with the call in [CallBundles]. Accept and
+ * decline go through the SDK, which records the answer and stops the ring; answering then opens
+ * [CallActivity] with the answered call.
+ */
 class IncomingCallActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_SESSION_ID = "SESSION_ID"
-        const val EXTRA_CALLER_NAME = "CALLER_NAME"
-        const val EXTRA_CALLER_AVATAR = "CALLER_AVATAR"
-        const val EXTRA_CALL_TYPE = "CALL_TYPE"
-        private const val LISTENER_ID = "incoming_call_listener"
-    }
 
     private lateinit var binding: ActivityIncomingCallBinding
     private lateinit var sessionId: String
@@ -32,17 +26,21 @@ class IncomingCallActivity : AppCompatActivity() {
         binding = ActivityIncomingCallBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: run {
+        val call = CallBundles.getCall(intent) ?: run {
             finish()
             return
         }
-        val callerName = intent.getStringExtra(EXTRA_CALLER_NAME) ?: getString(R.string.unknown)
-        val callerAvatar = intent.getStringExtra(EXTRA_CALLER_AVATAR) ?: ""
+        sessionId = call.sessionId
 
         applyWindowInsets()
-        setupUI(callerName, callerAvatar)
+        setupUI(call)
         setupButtons()
-        registerCallListener()
+
+        // The SDK reports the ring ending for every reason: cancelled, timed out, declined on another
+        // device, or answered (here or from the notification). Whichever it is, this screen is done.
+        CometChatCallNotifications.onIncomingCallScreenOpened(sessionId, CometChatCallNotifications.RingEndListener {
+            runOnUiThread { finish() }
+        })
     }
 
     private fun applyWindowInsets() {
@@ -53,68 +51,38 @@ class IncomingCallActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUI(name: String, avatar: String) {
+    private fun setupUI(call: IncomingCall) {
+        val name = call.callerName ?: getString(R.string.unknown)
         binding.tvCallerName.text = name
-        if (avatar.isNotEmpty()) {
-            Glide.with(this)
-                .load(avatar)
-                .placeholder(R.drawable.ic_default_avatar)
-                .error(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(binding.imgAvatar)
-        }
+        binding.imgAvatar.set(name, call.callerAvatarUrl)
+        // A group call is not a peer call: the call carries on when someone leaves.
+        val isGroup = !call.isPeerCall
+        binding.tvIncomingCall.setText(
+            when {
+                isGroup && call.isVideo -> R.string.incoming_group_video_call
+                isGroup -> R.string.incoming_group_voice_call
+                call.isVideo -> R.string.incoming_video_call
+                else -> R.string.incoming_voice_call
+            }
+        )
     }
 
     private fun setupButtons() {
         binding.btnAccept.setOnClickListener {
-            Repository.acceptCall(sessionId, object : CometChat.CallbackListener<Call>() {
-                override fun onSuccess(call: Call) {
-                    runOnUiThread {
-                        val intent = Intent(this@IncomingCallActivity, CallActivity::class.java)
-                        intent.putExtra(CallActivity.EXTRA_SESSION_ID, call.sessionId)
-                        intent.putExtra(CallActivity.EXTRA_CALL_TYPE, call.type)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-
-                override fun onError(e: CometChatException) {
-                    runOnUiThread {
-                        Toast.makeText(this@IncomingCallActivity, e.message, Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-                }
-            })
+            CometChatCallNotifications.answer(this, sessionId)
+            finish()
         }
 
         binding.btnReject.setOnClickListener {
-            Repository.rejectCall(sessionId, object : CometChat.CallbackListener<Call>() {
-                override fun onSuccess(call: Call) {
-                    finish()
-                }
-
-                override fun onError(e: CometChatException) {
-                    finish()
-                }
-            })
+            CometChatCallNotifications.decline(this, sessionId)
+            finish()
         }
-    }
-
-    private fun registerCallListener() {
-        CometChat.addCallListener(LISTENER_ID, object : CometChat.CallListener() {
-            override fun onIncomingCallCancelled(call: Call?) {
-                runOnUiThread { finish() }
-            }
-
-            override fun onIncomingCallReceived(call: Call?) {}
-            override fun onOutgoingCallAccepted(call: Call?) {}
-            override fun onOutgoingCallRejected(call: Call?) {}
-            override fun onCallEndedMessageReceived(call: Call?) {}
-        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        CometChat.removeCallListener(LISTENER_ID)
+        if (::sessionId.isInitialized) {
+            CometChatCallNotifications.onIncomingCallScreenClosed(sessionId)
+        }
     }
 }

@@ -38,7 +38,7 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.cometchat:calls-sdk-android:5.0.4")
+    implementation("com.cometchat:calls-sdk-android:5.1.0")
 }
 ```
 
@@ -51,7 +51,7 @@ Dive straight into our sample apps to see the CometChat Calls SDK in action.
 | Sample App | Description |
 |------------|-------------|
 | [Standalone Calling](samples/sample-app#readme) | Join calls by session ID — no Chat SDK required |
-| [Ringing](samples/sample-app-ringing#readme) | 1:1 calls with Chat SDK signaling (incoming/outgoing call screens, call logs) |
+| [Ringing](samples/sample-app-ringing#readme) | 1:1 and group calls that ring in every app state: Calls SDK `initiateCall` + Push Notifications SDK, call history, profile, light/dark |
 
 ---
 

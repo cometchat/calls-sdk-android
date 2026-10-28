@@ -152,7 +152,7 @@ class CallActivity : AppCompatActivity() {
     private fun endCall() {
         val callSession = CallSession.getInstance()
         if (callSession.isSessionActive) {
-            callSession.leaveSession()
+            callSession.leave()
         }
         CometChatOngoingCallService.abort(this)
         finish()
