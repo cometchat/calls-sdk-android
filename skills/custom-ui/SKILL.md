@@ -53,7 +53,7 @@ btnVideo.setOnClickListener {
 }
 btnSwitchCamera.setOnClickListener { callSession.switchCamera() }
 btnEndCall.setOnClickListener {
-    callSession.leaveSession()
+    callSession.leave()
     finish()
 }
 ```
@@ -133,7 +133,7 @@ callSession.addLayoutListener(this, object : LayoutListener() {
 | Pin/unpin participant | `pinParticipant(uid, type)`, `unpinParticipant()` |
 | Mute participant | `muteParticipant(uid)` |
 | Pause participant video | `pauseParticipantVideo(uid)` |
-| Leave session | `leaveSession()` |
+| Leave session | `leave()` (`leaveSession()` is deprecated since 5.1) |
 | Raise/lower hand | `raiseHand()`, `lowerHand()` |
 | Enable/disable PiP | `enablePictureInPictureLayout()`, `disablePictureInPictureLayout()` |
 | Set chat badge count | `setChatButtonUnreadCount(count)` |

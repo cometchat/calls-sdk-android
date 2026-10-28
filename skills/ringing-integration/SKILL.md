@@ -84,13 +84,18 @@ CometChatPushNotifications.registerToken(object : PNCallback<Unit> {
 // Before logout — WAIT for it: the request is authenticated by the session you are ending.
 CometChatPushNotifications.unregisterToken(object : PNCallback<Unit> {
     override fun onResult(result: PNResult<Unit>) {
+        if (!result.isSuccess) {
+            // Do not log out: offer Retry, or "Log out anyway" with a warning that this device may keep ringing.
+            showUnregisterFailed(result.errorOrNull())
+            return
+        }
         CometChatCalls.logout(callsCallback)
         CometChat.logout(chatCallback)
     }
 })
 ```
 
-If you don't wait, the device keeps ringing for the user who left.
+If you don't wait, or log out after a failed unregister, the device keeps ringing for the user who left: once logged out the request can no longer be retried. The sample's `ProfileActivity` offers Retry / Sign out anyway.
 
 ## 3. Session settings: build them once
 
@@ -271,7 +276,7 @@ A 1:1 call (`setPeerCall(true)`) ends for both sides. A group call carries on fo
 - **Group calls:** use `receiverType` group plus `setPeerCall(false)`. Without that, the session ends when the first member leaves.
 - **Don't wait for a push to learn about a decline:** poll the call log while ringing.
 - **Caller timeout shorter than the callee's ring** (45 s vs 60 s), so the callee never rings for a call nobody is waiting on.
-- **Unregister the token before logout, and wait for it to finish.**
+- **Unregister the token before logout, wait for it to finish, and don't log out if it failed** (offer a retry).
 - **Only a killed app proves the push works.** When the app is open, the ring can still arrive another way.
 
 ## Sample App Reference

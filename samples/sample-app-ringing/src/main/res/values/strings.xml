@@ -14,10 +14,11 @@
     <string name="auth_key_hint">Enter your Auth Key</string>
     <string name="push_provider_id">Push Provider ID</string>
     <string name="push_provider_id_hint">Enter your push provider ID</string>
-    <string name="push_provider_id_note">From the dashboard: Notifications → Push → your FCM provider. Without it, incoming calls do not ring.</string>
+    <string name="push_provider_id_note">Required. From the dashboard: Notifications → Push → your FCM provider. Without it, the push token cannot be registered and incoming calls do not ring.</string>
     <string name="please_select_region">Please select a region</string>
     <string name="invalid_app_id">Please enter a valid App ID</string>
     <string name="invalid_auth_key">Please enter a valid Auth Key</string>
+    <string name="invalid_push_provider_id">Please enter your Push Provider ID</string>
 
     <!-- Login Screen -->
     <string name="login">Login</string>
@@ -164,6 +165,9 @@
     <string name="sign_out_confirm_title">Sign out?</string>
     <string name="sign_out_confirm_message">This phone stops ringing for %1$s.</string>
     <string name="sign_out_failed">Sign out failed: %1$s</string>
+    <string name="unregister_failed_title">Could not stop ringing on this phone</string>
+    <string name="unregister_failed_message">Removing this phone\'s push token failed. If you sign out anyway, this phone may keep ringing for this user until the token is removed.</string>
+    <string name="sign_out_anyway">Sign out anyway</string>
 
     <!-- Buttons -->
     <string name="btn_continue">Continue</string>

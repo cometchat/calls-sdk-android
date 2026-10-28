@@ -120,23 +120,39 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     /**
-     * Removes this phone's push token first, and logs out only once that is done: the request is
+     * Removes this phone's push token first, and logs out only once that worked: the request is
      * authenticated by the session being logged out, and without it this phone keeps ringing for
-     * the user who left.
+     * the user who left. On failure the user chooses to retry or to log out anyway.
      */
     private fun signOut() {
         binding.btnLogout.isEnabled = false
-        PushNotifications.unregisterToken {
-            Repository.logoutCallsUser(object : CometChatCalls.CallbackListener<String>() {
-                override fun onSuccess(message: String) = logoutChat()
-
-                override fun onError(e: CallsException) {
-                    // The Chat session still has to go, or the next launch signs this user back in.
-                    Log.e(TAG, "Calls SDK logout failed: ${e.message}")
-                    logoutChat()
-                }
-            })
+        PushNotifications.unregisterToken { success ->
+            if (isFinishing || isDestroyed) return@unregisterToken
+            if (success) logoutCalls() else offerUnregisterRetry()
         }
+    }
+
+    private fun offerUnregisterRetry() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.unregister_failed_title)
+            .setMessage(R.string.unregister_failed_message)
+            .setCancelable(false)
+            .setNegativeButton(R.string.sign_out_anyway) { _, _ -> logoutCalls() }
+            .setPositiveButton(R.string.retry) { _, _ -> signOut() }
+            .setNeutralButton(R.string.cancel) { _, _ -> binding.btnLogout.isEnabled = true }
+            .show()
+    }
+
+    private fun logoutCalls() {
+        Repository.logoutCallsUser(object : CometChatCalls.CallbackListener<String>() {
+            override fun onSuccess(message: String) = logoutChat()
+
+            override fun onError(e: CallsException) {
+                // The Chat session still has to go, or the next launch signs this user back in.
+                Log.e(TAG, "Calls SDK logout failed: ${e.message}")
+                logoutChat()
+            }
+        })
     }
 
     private fun logoutChat() {

@@ -80,9 +80,11 @@ object AppUtils {
             .apply()
     }
 
+    /** Saved App ID, Auth Key and push provider ID: all three are required. */
     fun hasCredentials(context: Context): Boolean {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return !prefs.getString(KEY_APP_ID, null).isNullOrEmpty() &&
-                !prefs.getString(KEY_AUTH_KEY, null).isNullOrEmpty()
+                !prefs.getString(KEY_AUTH_KEY, null).isNullOrEmpty() &&
+                getPushProviderId(context).isNotBlank()
     }
 }

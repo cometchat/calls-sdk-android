@@ -56,6 +56,10 @@ class AppCredentialsActivity : AppCompatActivity() {
                 binding.etAuthKey.text.toString().isEmpty() -> {
                     Toast.makeText(this, R.string.invalid_auth_key, Toast.LENGTH_SHORT).show()
                 }
+                // Required: registering the push token fails without it, so no call would ring.
+                binding.etPushProviderId.text.toString().isBlank() -> {
+                    Toast.makeText(this, R.string.invalid_push_provider_id, Toast.LENGTH_SHORT).show()
+                }
                 else -> {
                     viewModel.initSDKs(
                         this,

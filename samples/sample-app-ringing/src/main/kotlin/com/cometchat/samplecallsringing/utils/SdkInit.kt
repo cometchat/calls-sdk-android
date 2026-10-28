@@ -31,11 +31,15 @@ object SdkInit {
     private var error: String? = null
     private val waiting = mutableListOf<(String?) -> Unit>()
 
-    /** The saved or built-in credentials, or null when the app has none yet. */
+    /**
+     * The saved or built-in credentials, or null when the app has none yet. A push provider ID is
+     * required as well: registering the push token fails without it, so the app would never ring.
+     */
     fun credentials(context: Context): Pair<String, String>? {
         if (AppConstants.APP_ID.isNotEmpty() && AppConstants.APP_ID != "YOUR_APP_ID" &&
             AppConstants.REGION.isNotEmpty() &&
-            AppConstants.AUTH_KEY.isNotEmpty() && AppConstants.AUTH_KEY != "YOUR_AUTH_KEY"
+            AppConstants.AUTH_KEY.isNotEmpty() && AppConstants.AUTH_KEY != "YOUR_AUTH_KEY" &&
+            AppUtils.getPushProviderId(context).isNotBlank()
         ) {
             return AppConstants.APP_ID to AppConstants.REGION
         }

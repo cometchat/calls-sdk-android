@@ -34,8 +34,9 @@ object PushNotifications {
      */
     fun init(context: Context, appId: String, region: String) {
         val providerId = AppUtils.getPushProviderId(context)
+        // SdkInit.credentials() sends the app to the credentials screen without one, so this is a fallback.
         if (providerId.isEmpty()) {
-            Log.w(TAG, "No push provider ID: incoming calls will not ring. Set it in AppConstants or on the credentials screen.")
+            Log.e(TAG, "No push provider ID: registering the push token will fail. Set it in AppConstants or on the credentials screen.")
         }
         CometChatPushNotifications.init(
             context.applicationContext,
@@ -64,17 +65,17 @@ object PushNotifications {
     }
 
     /**
-     * Stops this phone ringing for the signed-in user, then calls [onDone] on the main thread,
-     * whether or not it worked. Call it before logging out and log out in [onDone]: the request is
-     * authenticated by the session being logged out.
+     * Stops this phone ringing for the signed-in user, then calls [onDone] on the main thread with
+     * whether it worked. Call it before logging out and log out only on success: the request is
+     * authenticated by the session being logged out, so after a logout it can no longer be retried.
      */
-    fun unregisterToken(onDone: () -> Unit) {
+    fun unregisterToken(onDone: (success: Boolean) -> Unit) {
         CometChatPushNotifications.unregisterToken(object : PNCallback<Unit> {
             override fun onResult(result: PNResult<Unit>) {
                 if (!result.isSuccess) {
                     Log.e(TAG, "Unregistering the push token failed: ${result.errorOrNull()}")
                 }
-                mainHandler.post(onDone)
+                mainHandler.post { onDone(result.isSuccess) }
             }
         })
     }

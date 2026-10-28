@@ -20,7 +20,10 @@ inclusion: manual
 ```kotlin
 import com.cometchat.calls.services.CometChatOngoingCallService
 import com.cometchat.calls.utils.OngoingNotification
+import com.cometchat.calls.constants.Constants
 import com.cometchat.calls.core.CallSession
+import com.cometchat.calls.core.CometChatCalls
+import com.cometchat.calls.exceptions.CometChatException
 import com.cometchat.calls.listeners.SessionStatusListener
 import com.cometchat.calls.listeners.ButtonClickListener
 ```
@@ -86,34 +89,43 @@ callSession.addButtonClickListener(this, object : ButtonClickListener() {
 
 ### 4. Handle Remote Call End
 
-Register a `CometChat.CallListener` to detect when the remote party ends the call, then clean up the foreground service:
+The Calls SDK 5.1 reports the far side ending the call on the session itself; no Chat SDK listener is involved.
+Build a 1:1 call with `setPeerCall(true)` (on both sides) and it ends for both when either leaves: the side that
+stayed gets `onConnectionClosed` (or `onSessionLeft`), which the listener from step 2 already handles. A group call
+(`setPeerCall(false)`) carries on for whoever is left.
+
+When hanging up a 1:1 call yourself, leave and also mark it ended on the server, as the sample's `CallActivity` does:
 
 ```kotlin
-CometChat.addCallListener(LISTENER_ID, object : CometChat.CallListener() {
-    override fun onCallEndedMessageReceived(call: Call?) {
-        val session = CallSession.getInstance()
-        if (session.isSessionActive) {
-            session.leaveSession()
-        }
-        CometChatOngoingCallService.abort(this@CallActivity)
-        runOnUiThread { finish() }
+// sessionId and isPeerCall: the call this screen joined
+private fun endCall() {
+    val session = CallSession.getInstance()
+    if (session.isSessionActive) session.leave()
+    if (isPeerCall) {
+        CometChatCalls.endCall(sessionId, Constants.CALL_STATUS_ENDED, object : CometChatCalls.CallbackListener<Void>() {
+            override fun onSuccess(result: Void?) {}
+            override fun onError(e: CometChatException) { /* the far side may already have ended it */ }
+        })
     }
-    override fun onIncomingCallReceived(call: Call?) {}
-    override fun onOutgoingCallAccepted(call: Call?) {}
-    override fun onOutgoingCallRejected(call: Call?) {}
-    override fun onIncomingCallCancelled(call: Call?) {}
-})
+    CometChatOngoingCallService.abort(this)
+    finish()
+}
 ```
+
+Before the call is answered there is no session to watch. With the Push Notifications SDK 2.0 the ringing screen
+learns the ring ended (cancelled, timed out, answered or declined on another device) from
+`CometChatCallNotifications.onIncomingCallScreenOpened(sessionId, RingEndListener)` (`ringing-integration` §7).
 
 ### 5. Always Stop in onDestroy
 
 ```kotlin
 override fun onDestroy() {
     super.onDestroy()
-    CometChat.removeCallListener(LISTENER_ID)
     CometChatOngoingCallService.abort(this)
 }
 ```
+
+The session listeners are lifecycle-aware (`addSessionStatusListener(owner, …)`) and need no removal.
 
 ### 6. Custom Notification (Optional)
 
@@ -144,10 +156,10 @@ CometChatOngoingCallService.launch(this)
 
 ### 7. VoIP Integration — Additional Cleanup (Optional)
 
-When using background handling with VoIP calling (ConnectionService + TelecomManager), also disconnect the `CallConnection` and cancel any VoIP notifications on every terminal state:
+When you build your own incoming UI on Telecom (the optional `voip-calling` skill: ConnectionService + TelecomManager, Push SDK in `CallMode.MANUAL`), also disconnect the `CallConnection` and cancel any VoIP notifications on every terminal state:
 
 ```kotlin
-// In each terminal callback (onSessionLeft, onSessionTimedOut, onConnectionClosed, onCallEndedMessageReceived):
+// In each terminal callback (onSessionLeft, onSessionTimedOut, onConnectionClosed):
 CometChatOngoingCallService.abort(this@CallActivity)
 CallConnectionHolder.endCall()
 CallNotificationManager.cancelNotification(this@CallActivity)
@@ -167,13 +179,13 @@ finish()
 - The notification channel ID **must** be `"CometChat_Call_Ongoing_Conference"`
 - Without the `<service>` entry in your manifest, `launch()` finds no service and the call drops in the background
 - Always call `abort()` in `onDestroy()` to prevent leaked services
-- Always remove `CometChat.CallListener` in `onDestroy()` to prevent leaks
+- A remote hang-up only ends your side of a 1:1 call if both sides joined with `setPeerCall(true)`
 - This is for keeping **active** calls alive — for receiving calls when app is killed, use VoIP Calling
 - Call `launch()` only after `onSessionJoined()` — not before joining
 - Custom notification must be set **before** calling `launch()`
-- When using VoIP (ConnectionService), also call `CallConnectionHolder.endCall()` in every terminal state to properly disconnect the Telecom connection
+- When using your own Telecom incoming UI (ConnectionService), also call `CallConnectionHolder.endCall()` in every terminal state to properly disconnect the Telecom connection
 
 ## Sample App Reference
 
 - `sample-app-ringing` — `AndroidManifest.xml` — the `CometChatOngoingCallService` declaration
-- `sample-app-ringing` — `CallActivity.kt` — basic foreground service pattern with `launch()` in `onSessionJoined()`, `abort()` in `onSessionLeft()` and `onDestroy()`
+- `sample-app-ringing` — `CallActivity.kt` — basic foreground service pattern with `launch()` in `onSessionJoined()`, `abort()` in `onSessionLeft()` / `onConnectionClosed()` and `onDestroy()`, and `endCall()` for a 1:1 hang-up

@@ -39,7 +39,7 @@ cp -r skills/ /path/to/your/project/skills/
 | `screen-sharing` | Screen share setup, MediaProjection permissions |
 | `picture-in-picture` | PiP mode configuration |
 | `background-handling` | CometChatOngoingCallService, foreground service |
-| `voip-calling` | Building the incoming side yourself with ConnectionService / PhoneAccount |
+| `voip-calling` | Optional: building the incoming side yourself on Telecom (ConnectionService / PhoneAccount), Push SDK 2.0 in `CallMode.MANUAL` |
 | `audio-controls` | Mute/unmute, audio device switching |
 | `video-controls` | Camera on/off, switch camera |
 | `participant-management` | Participant list, mute/kick, raise hand |
@@ -54,7 +54,7 @@ Each skill has a `description` field in its YAML frontmatter that lists trigger 
 
 - CometChat Calls SDK v5 (5.1.0+)
 - CometChat Push Notifications SDK 2.0 — rings incoming calls (`ringing-integration`)
-- CometChat Chat SDK v4 — user and group lists in the samples; signalling in the `voip-calling` approach
+- CometChat Chat SDK v4 — user and group lists in the samples (not part of the call flow)
 - Kotlin, Java 17
 - Gradle KTS, minSdk 26, compileSdk 35 (compileSdk 36 and AGP 8.9.1+ with the Push Notifications SDK 2.0)
 - Works with: Kiro, Claude Code, Cursor, Copilot, and other AI coding assistants that support the skills ecosystem

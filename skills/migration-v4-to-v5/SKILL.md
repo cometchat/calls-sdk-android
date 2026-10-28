@@ -181,7 +181,7 @@ Static `CometChatCalls.*` methods → instance methods on `CallSession`.
 
 | v4 Static Method | v5 CallSession Method |
 |---|---|
-| `CometChatCalls.endSession()` | `callSession.leaveSession()` |
+| `CometChatCalls.endSession()` | `callSession.leave()` (5.1+; `leaveSession()` is its deprecated alias) |
 | `CometChatCalls.switchCamera()` | `callSession.switchCamera()` |
 | `CometChatCalls.muteAudio(true)` | `callSession.muteAudio()` |
 | `CometChatCalls.muteAudio(false)` | `callSession.unmuteAudio()` |

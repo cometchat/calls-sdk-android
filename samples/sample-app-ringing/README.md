@@ -23,8 +23,9 @@ rings, so the call connects as soon as it is answered.
 2. Copy your `google-services.json` into `samples/sample-app-ringing/`. The file is git-ignored. It is required to
    build: the module applies the Google Services plugin, and the build fails without the file.
 3. Run the `sample-app-ringing` module on two devices.
-4. On first launch, enter your **App ID**, **Auth Key**, **Region** and **Push Provider ID**. You can instead set
-   them in `utils/AppConstants.kt` before building.
+4. On first launch, enter your **App ID**, **Auth Key**, **Region** and **Push Provider ID** (all required: the
+   push token cannot be registered without the provider ID). You can instead set them in `utils/AppConstants.kt`
+   before building.
 5. Log in as a different user on each device and call one from the other. Logging in registers this device's push
    token, so calls to that user ring here. Signing out removes it.
 
@@ -78,9 +79,9 @@ Duplicate events and double taps change nothing.
    `RingReadiness.MICROPHONE_DENIED` (the microphone was refused when answering, so calls still ring but join
    muted); the sample does not prompt for that one.
 
-**Signing out** waits for `CometChatPushNotifications.unregisterToken()` before logging out of the SDKs. The
-request is authenticated by the session being logged out, and without it this device keeps ringing for the user
-who left.
+**Signing out** waits for `CometChatPushNotifications.unregisterToken()` and logs out of the SDKs only if it
+succeeded. The request is authenticated by the session being logged out, and without it this device keeps ringing
+for the user who left. If it fails, the app offers **Retry** or **Sign out anyway** (with that warning).
 
 ## Project Structure
 
